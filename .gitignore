@@ -1,0 +1,7 @@
+**/.pytest_cache
+**/.mypy_cache
+*.iml
+*.pem
+*.crt
+*.csr
+*.key

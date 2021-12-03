@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "scraper"
+version = "0.1.1"
+description = ""
+authors = ["Dmitrii Zakharov <dmitrii@zakharov.cc>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pymongo = {extras = ["srv"], version = "^3.12.1"}
+schedule = "^1.1.0"
+pymongo-stubs = "^0.1.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+black = "^21.10b0"
+isort = "^5.10.1"
+flake8 = "^4.0.1"
+pydocstyle = "^6.1.1"
+bandit = "^1.7.1"
+safety = "^1.10.3"
+mypy = "^0.910"
+radon = "^5.1.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

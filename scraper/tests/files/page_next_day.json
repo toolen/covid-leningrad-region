@@ -1,0 +1,83 @@
+[
+  {
+    "date": "2021-10-15",
+    "localities": [
+      {
+        "locality_number_of_infections": 4,
+        "locality_total_number_of_infections": 1006,
+        "locality_total_number_of_recoveries": 830,
+        "locality": "\u0433. \u0411\u043e\u043a\u0441\u0438\u0442\u043e\u0433\u043e\u0440\u0441\u043a"
+      },
+      {
+        "locality_number_of_infections": 0,
+        "locality_total_number_of_infections": 3,
+        "locality_total_number_of_recoveries": 1,
+        "locality": "\u0434. \u0410\u0441\u0442\u0440\u0430\u0447\u0438"
+      },
+      {
+        "locality_number_of_infections": 5,
+        "locality_total_number_of_infections": 891,
+        "locality_total_number_of_recoveries": 645,
+        "locality": "\u0433. \u041f\u0438\u043a\u0430\u043b\u0451\u0432\u043e"
+      }
+    ],
+    "district": "\u0411\u043e\u043a\u0441\u0438\u0442\u043e\u0433\u043e\u0440\u0441\u043a\u0438\u0439",
+    "district_total_number_of_infections": 2438,
+    "district_total_number_of_recoveries": 1831,
+    "district_total_percentage_of_recovered": 75.1
+  },
+  {
+    "date": "2021-10-15",
+    "localities": [
+      {
+        "locality_number_of_infections": 1,
+        "locality_total_number_of_infections": 712,
+        "locality_total_number_of_recoveries": 577,
+        "locality": "\u0433. \u0412\u043e\u043b\u043e\u0441\u043e\u0432\u043e"
+      },
+      {
+        "locality_number_of_infections": 0,
+        "locality_total_number_of_infections": 32,
+        "locality_total_number_of_recoveries": 22,
+        "locality": "\u043f. \u041a\u0430\u043b\u043e\u0436\u0438\u0446\u044b"
+      },
+      {
+        "locality_number_of_infections": 0,
+        "locality_total_number_of_infections": 17,
+        "locality_total_number_of_recoveries": 12,
+        "locality": "\u0434. \u041a\u0430\u043b\u043e\u0436\u0438\u0446\u044b"
+      }
+    ],
+    "district": "\u0412\u043e\u043b\u043e\u0441\u043e\u0432\u0441\u043a\u0438\u0439",
+    "district_total_number_of_infections": 2648,
+    "district_total_number_of_recoveries": 1905,
+    "district_total_percentage_of_recovered": 71.9
+  },
+  {
+    "date": "2021-10-15",
+    "localities": [
+      {
+        "locality_number_of_infections": 4,
+        "locality_total_number_of_infections": 1386,
+        "locality_total_number_of_recoveries": 989,
+        "locality": "\u0433. \u0412\u043e\u043b\u0445\u043e\u0432"
+      },
+      {
+        "locality_number_of_infections": 1,
+        "locality_total_number_of_infections": 54,
+        "locality_total_number_of_recoveries": 43,
+        "locality": "\u0441. \u041a\u043e\u043b\u0447\u0430\u043d\u043e\u0432\u043e"
+      },
+      {
+        "locality_number_of_infections": 2,
+        "locality_total_number_of_infections": 341,
+        "locality_total_number_of_recoveries": 305,
+        "locality": "\u0433. \u0421\u044f\u0441\u044c\u0441\u0442\u0440\u043e\u0439"
+      }
+    ],
+    "district": "\u0412\u043e\u043b\u0445\u043e\u0432\u0441\u043a\u0438\u0439",
+    "district_total_number_of_infections": 2488,
+    "district_total_number_of_recoveries": 1956,
+    "district_total_percentage_of_recovered": 50.3
+  }
+]
