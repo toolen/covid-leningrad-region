@@ -1,3 +1,4 @@
+"""This file contains types."""
 from datetime import datetime
 from typing import Dict, List, Union
 

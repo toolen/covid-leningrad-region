@@ -1,7 +1,14 @@
 **/.pytest_cache
 **/.mypy_cache
+**/.idea
+.idea
 *.iml
 *.pem
 *.crt
 *.csr
+*.srl
 *.key
+*.env
+*.env_prod
+.coverage
+.bash_history

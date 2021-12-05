@@ -1,17 +1,26 @@
-from typing import Callable, Dict, Tuple, Union
+"""This file contains constants."""
+from typing import Callable, Dict, Final, Tuple, Union
 
-PROPERTY_DISTRICT_DATE = "date"
-PROPERTY_DISTRICT = "district"
-PROPERTY_DISTRICT_TOTAL_NUMBER_OF_INFECTIONS = "district_total_number_of_infections"
-PROPERTY_DISTRICT_TOTAL_NUMBER_OF_RECOVERIES = "district_total_number_of_recoveries"
-PROPERTY_DISTRICT_TOTAL_PERCENTAGE_OF_RECOVERED = (
+PROPERTY_DISTRICT_DATE: Final = "date"
+PROPERTY_DISTRICT: Final = "district"
+PROPERTY_DISTRICT_TOTAL_NUMBER_OF_INFECTIONS: Final = (
+    "district_total_number_of_infections"
+)
+PROPERTY_DISTRICT_TOTAL_NUMBER_OF_RECOVERIES: Final = (
+    "district_total_number_of_recoveries"
+)
+PROPERTY_DISTRICT_TOTAL_PERCENTAGE_OF_RECOVERED: Final = (
     "district_total_percentage_of_recovered"
 )
-PROPERTY_DISTRICT_LOCALITIES = "localities"
-PROPERTY_LOCALITY = "locality"
-PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS = "locality_number_of_infections"
-PROPERTY_LOCALITY_TOTAL_NUMBER_OF_INFECTIONS = "locality_total_number_of_infections"
-PROPERTY_LOCALITY_TOTAL_NUMBER_OF_RECOVERIES = "locality_total_number_of_recoveries"
+PROPERTY_DISTRICT_LOCALITIES: Final = "localities"
+PROPERTY_LOCALITY: Final = "locality"
+PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS: Final = "locality_number_of_infections"
+PROPERTY_LOCALITY_TOTAL_NUMBER_OF_INFECTIONS: Final = (
+    "locality_total_number_of_infections"
+)
+PROPERTY_LOCALITY_TOTAL_NUMBER_OF_RECOVERIES: Final = (
+    "locality_total_number_of_recoveries"
+)
 DISTRICT_PROPERTIES: Tuple[str, str, str, str] = (
     PROPERTY_DISTRICT,
     PROPERTY_DISTRICT_TOTAL_NUMBER_OF_INFECTIONS,

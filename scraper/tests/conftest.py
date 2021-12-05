@@ -12,6 +12,7 @@ from scraper.db import DBWrapper
 
 @pytest.fixture
 def db():
+    print(DB_URI)
     db = DBWrapper(
         DB_URI, f"{DB_NAME}_test", DB_COLLECTION_NAME, TLS_CERT_KEY_PATH, TLS_CA_PATH
     )

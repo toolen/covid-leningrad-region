@@ -1,6 +1,6 @@
 """This file contains the code for working with the database."""
 import logging
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, cast
 
 from pymongo import MongoClient, UpdateOne
 from pymongo.collection import Collection
@@ -25,7 +25,7 @@ class DBWrapper:
         tls_ca_path: Optional[str] = None,
     ) -> None:
         """
-        Constructs the DBWrapper class.
+        Construct the DBWrapper class.
 
         :param uri:
         :param db_name:
@@ -58,7 +58,7 @@ class DBWrapper:
             connectTimeoutMS=1000,
             retryWrites=True,
             maxPoolSize=50,
-            wtimeout=2500,
+            wTimeoutMS=2500,
             **tls
         )
 
@@ -71,17 +71,38 @@ class DBWrapper:
         return self.client[self.db_name][self.collection_name]
 
     def drop_collection(self) -> None:
+        """
+        Drop default collection.
+
+        :return:
+        """
         collection = self.get_collection()
         collection.drop()
 
     def collection_size(self) -> int:
+        """
+        Return size of default collection.
+
+        :return:
+        """
         collection = self.get_collection()
-        return collection.estimated_document_count()
+        return cast(int, collection.estimated_document_count())
 
     def close(self) -> None:
+        """
+        Close database connection.
+
+        :return:
+        """
         self.client.close()
 
     def save_data(self, data: List[DistrictType]) -> None:
+        """
+        Save data into database.
+
+        :param data:
+        :return:
+        """
         operations = []
         for district in data:
             filter_ = {

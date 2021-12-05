@@ -10,8 +10,9 @@ def test_covid_page_parser(path_to_files_dir):
     with open(os.path.join(path_to_files_dir, "page.html"), "r") as f:
         parser = CovidPageParser()
         html = f.read()
-        result = parser.feed(html)
+        result = parser.parse(html)
 
+        assert result is not None
         assert len(result) == 3
 
         with open(os.path.join(path_to_files_dir, "page.json"), "r") as json_file:

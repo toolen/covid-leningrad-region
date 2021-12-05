@@ -1,12 +1,10 @@
-FROM python:3.9.7-slim-buster AS development_build
+FROM python:3.10.0-slim-bullseye@sha256:95bebb8af5996a5c2ad12526170fc599ff281bb823434b9f946335c35ebc5f2b AS development_build
 
 LABEL maintainer="dmitrii@zakharov.cc"
 
 ARG APP_ENV
 
 ENV APP_ENV=${APP_ENV} \
-  # build:
-  BUILD_ONLY_PACKAGES='wget' \
   # python:
   PYTHONFAULTHANDLER=1 \
   PYTHONHASHSEED=random \
@@ -18,32 +16,35 @@ ENV APP_ENV=${APP_ENV} \
   # tini:
   TINI_VERSION=v0.19.0 \
   # poetry:
-  POETRY_VERSION=1.1.7 \
+  POETRY_VERSION=1.1.12 \
   POETRY_NO_INTERACTION=1 \
   POETRY_VIRTUALENVS_CREATE=false \
   POETRY_CACHE_DIR='/var/cache/pypoetry' \
-  PATH="$PATH:/root/.poetry/bin"
+  PATH="$PATH:/root/.local/bin"
 
 
 # System deps:
-RUN \
-  set -eox \
+RUN set -exo \
   && apt-get update \
   && apt-get upgrade -y \
   && apt-get install --no-install-recommends -y \
     # Defining build-time-only dependencies:
-    $BUILD_ONLY_PACKAGES \
+    curl=7.74.0-1.3+b1 \
   # Installing `tini` utility:
   # https://github.com/krallin/tini
-  && wget -O /usr/local/bin/tini "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini" \
+  && curl -sOL "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini" \
+  && curl -sOL "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.sha256sum" \
+  && sha256sum -c tini.sha256sum \
+  && mv tini /usr/local/bin/tini \
   && chmod +x /usr/local/bin/tini \
   && tini --version \
+  && rm -rf tini.sha256sum \
   # Installing `poetry` package manager:
   # https://github.com/python-poetry/poetry
-  && wget -O- 'https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py' | python \
+  && curl -sSL 'https://install.python-poetry.org' | python - \
   && poetry --version \
   # Removing build-time-only dependencies:
-  && apt-get remove -y $BUILD_ONLY_PACKAGES \
+  && apt-get remove -y curl \
   # Cleaning cache:
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && apt-get clean -y \
@@ -52,8 +53,7 @@ RUN \
 WORKDIR /code
 
 # Setting up proper permissions:
-RUN \
-  set -eox \
+RUN set -exo \
   && groupadd -g 1000 -r app \
   && useradd -u 1000 -d /code -r -g app app \
   && chown app:app -R /code
@@ -62,14 +62,9 @@ RUN \
 COPY --chown=app:app ./poetry.lock ./pyproject.toml /code/
 
 # Project initialization:
-RUN echo "$APP_ENV" && poetry version \
-  && poetry install \
-    $(if [ "$APP_ENV" = 'production' ]; then echo '--no-dev'; fi) \
-    --no-interaction --no-ansi \
-  # Upgrading pip, it is insecure, remove after `pip@21.1`
-  && poetry run pip install -U pip \
+RUN poetry install --no-interaction --no-ansi \
   # Cleaning poetry installation's cache for production:
-  && if [ "$APP_ENV" = 'production' ]; then rm -rf "$POETRY_CACHE_DIR"; fi
+  && if [ "$APP_ENV" = "production" ]; then rm -rf "$POETRY_CACHE_DIR"; fi
 
 # Running as non-root user:
 USER app

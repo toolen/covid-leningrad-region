@@ -1,17 +1,18 @@
 [tool.poetry]
 name = "scraper"
-version = "0.1.1"
+version = "1.0.0"
 description = ""
 authors = ["Dmitrii Zakharov <dmitrii@zakharov.cc>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-pymongo = {extras = ["srv"], version = "^3.12.1"}
 schedule = "^1.1.0"
-pymongo-stubs = "^0.1.0"
+pydantic = "^1.8.2"
+pymongo = {version = "3.11.3", extras = ["srv"]}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
 black = "^21.10b0"
 isort = "^5.10.1"
 flake8 = "^4.0.1"
