@@ -3,9 +3,12 @@ import logging
 from html.parser import HTMLParser
 from typing import Dict, List, Optional, Tuple
 
-from scraper.constants import (DISTRICT_PROPERTIES,
-                               PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS,
-                               PROPERTY_TO_TYPE_WRAPPER, RU_HEADER_TO_PROPERTY)
+from scraper.constants import (
+    DISTRICT_PROPERTIES,
+    PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS,
+    PROPERTY_TO_TYPE_WRAPPER,
+    RU_HEADER_TO_PROPERTY,
+)
 from scraper.models import District, Locality
 from scraper.types import DistrictType
 from scraper.utils import get_date_from_str

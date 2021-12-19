@@ -1,9 +1,12 @@
 import json
 import os
 
-from scraper.constants import (PROPERTY_DISTRICT, PROPERTY_DISTRICT_DATE,
-                               PROPERTY_DISTRICT_LOCALITIES,
-                               PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS)
+from scraper.constants import (
+    PROPERTY_DISTRICT,
+    PROPERTY_DISTRICT_DATE,
+    PROPERTY_DISTRICT_LOCALITIES,
+    PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS,
+)
 from scraper.db import DBWrapper
 from tests.conftest import date_parser
 

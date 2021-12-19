@@ -12,15 +12,15 @@ image:
 	make trivy
 	make size
 container:
-	docker run --cap-drop=ALL $(tag)
+	docker run --cap-drop=ALL --dns=77.88.8.8 --dns=77.88.8.1 $(tag)
 connect:
-	docker run -it -v $(pwd):/code --cap-drop=ALL $(tag) /bin/bash
+	docker run -it --cap-drop=ALL $(tag) /bin/ash
 size:
 	docker images | grep $(repository) | grep $(version)
 hadolint:
 	docker run --rm -i hadolint/hadolint:$(hadolint_version) < Dockerfile
 trivy:
-	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v ~/.cache/trivy:/root/.cache/ aquasec/trivy:$(trivy_version) $(tag)
+	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v ~/.cache/trivy:/root/.cache/ aquasec/trivy:$(trivy_version) --ignore-unfixed $(tag)
 push:
 	docker trust sign $(tag)
 mypy:
@@ -38,7 +38,8 @@ pre-commit:
 	poetry run safety check
 	poetry run radon cc --min C $(package_name)
 	poetry run radon mi --min B $(package_name)
-	poetry run radon raw --summary $(package_name)
-	poetry run radon hal $(package_name)
+	poetry run radon raw --summary $(package_name) | tail -n12
+email_server:
+	python -m smtpd -n -c DebuggingServer localhost:1025
 #env:
 #	export $(grep -v "^#" /home/toolen/Projects/covid-stat-priozersk/.env_local | xargs)

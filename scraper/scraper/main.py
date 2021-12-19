@@ -10,11 +10,18 @@ from urllib.request import Request, urlopen
 
 import schedule
 
-from scraper.config import (DB_COLLECTION_NAME, DB_NAME, DB_URI, TLS_CA_PATH,
-                            TLS_CERT_KEY_PATH, URL)
+from scraper.config import (
+    DB_COLLECTION_NAME,
+    DB_NAME,
+    DB_URI,
+    TLS_CA_PATH,
+    TLS_CERT_KEY_PATH,
+    URL,
+)
 from scraper.db import DBWrapper
 from scraper.decorators import retry_on_failure
 from scraper.exceptions import InvalidURLException
+from scraper.mail import send_message_to_admin
 from scraper.parsers import CovidPageParser
 
 logging.basicConfig(
@@ -69,11 +76,13 @@ def job() -> None:
             db.save_data(result)
             db.close()
         else:
-            logger.error("HTML is None!")
+            msg = "Failed to get HTML page."
+            logger.error(msg)
+            send_message_to_admin(msg)
+        logger.info("Job done.")
     except BaseException as e:
         logger.error(e)
-    finally:
-        logger.info("Job done.")
+        send_message_to_admin(str(e))
 
 
 def graceful_shutdown(signals: signal.Signals, frame_type: FrameType) -> None:

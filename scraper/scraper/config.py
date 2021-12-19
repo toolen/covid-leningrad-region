@@ -1,6 +1,8 @@
 """This file contains configuration properties."""
 import os
 
+from scraper.utils import avoid_empty_value, email_url
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CERTS_DIR = os.path.join(BASE_DIR, "certs")
 
@@ -21,3 +23,6 @@ DB_NAME = os.getenv("SCRAPER_DB_NAME", "covid_stat")
 DB_COLLECTION_NAME = os.getenv("SCRAPER_DB_COLLECTION_NAME", "leningrad_region")
 TLS_CERT_KEY_PATH = os.getenv("SCRAPER_TLS_CERT_KEY_PATH", default_tls_cert_key_path)
 TLS_CA_PATH = os.getenv("SCRAPER_TLS_CA_PATH", default_ca_path)
+EMAIL_URL = email_url(os.getenv("SCRAPER_EMAIL_URL", "smtp://localhost:1025"))
+DEFAULT_FROM_EMAIL = avoid_empty_value(os.getenv("SCRAPER_DEFAULT_FROM_EMAIL"))
+ADMIN_EMAIL = avoid_empty_value(os.getenv("SCRAPER_ADMIN_EMAIL"))
