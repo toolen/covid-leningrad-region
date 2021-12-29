@@ -299,3 +299,6 @@ cython_debug/
 *.csr
 *.srl
 *.key
+
+# covid-page-mock
+covid-page-mock/pages/*.html

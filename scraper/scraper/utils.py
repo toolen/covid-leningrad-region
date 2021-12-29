@@ -6,14 +6,15 @@ from urllib.parse import ParseResult, urlparse
 from scraper.exceptions import ImproperlyConfiguredException
 
 
-def get_date_from_str(date: str) -> datetime:
+def get_date_from_str(date: str, format_: str = "%d.%m.%y") -> datetime:
     """
     Covert string to datetime.
 
     :param date:
+    :param format_:
     :return:
     """
-    return datetime.strptime(date, "%d.%m.%y")
+    return datetime.strptime(date, format_)
 
 
 def email_url(url: Optional[str]) -> Dict[str, Union[str, int, bool]]:

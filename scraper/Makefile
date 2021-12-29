@@ -3,7 +3,7 @@ repository = toolen/scraper
 version = $(shell poetry version -s)
 tag = $(repository):$(version)
 hadolint_version=2.8.0
-trivy_version=0.21.1
+trivy_version=0.22.0
 
 image:
 	export DOCKER_BUILDKIT=1
@@ -39,7 +39,7 @@ pre-commit:
 	poetry run radon cc --min C $(package_name)
 	poetry run radon mi --min B $(package_name)
 	poetry run radon raw --summary $(package_name) | tail -n12
-email_server:
+email-server:
 	python -m smtpd -n -c DebuggingServer localhost:1025
 #env:
 #	export $(grep -v "^#" /home/toolen/Projects/covid-stat-priozersk/.env_local | xargs)

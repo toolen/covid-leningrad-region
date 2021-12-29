@@ -1,4 +1,7 @@
 /certs
+/dist
+.mypy_cache/
+.pytest_cache/
 .idea
 .coverage
 .bash_history

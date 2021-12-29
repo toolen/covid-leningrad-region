@@ -9,6 +9,7 @@ from scraper.constants import (
     PROPERTY_TO_TYPE_WRAPPER,
     RU_HEADER_TO_PROPERTY,
 )
+from scraper.exceptions import CurrentDatesNotMatchException, NoCurrentDateException
 from scraper.models import District, Locality
 from scraper.types import DistrictType
 from scraper.utils import get_date_from_str
@@ -28,6 +29,7 @@ class CovidPageParser(HTMLParser):
     current_district: Optional[District] = None
     current_locality: Optional[Locality] = None
     current_tag = None
+    skip_all = False
 
     def handle_starttag(self, tag: str, attrs: List[Tuple[str, Optional[str]]]) -> None:
         """
@@ -37,39 +39,58 @@ class CovidPageParser(HTMLParser):
         :param attrs:
         :return:
         """
+        if self.skip_all:
+            return
+
         self.current_tag = tag
 
         if tag == "tr":
-            self.col_index = -1
-            if self.row_index is None:
-                self.row_index = 0
-            else:
-                self.row_index += 1
-
-            if self.row_index != 0:
-                if self.current_district and self.current_locality:
-                    self.current_district.localities.append(self.current_locality)
-                self.current_locality = Locality()
+            self.handle_start_of_tr_tag()
 
         if tag == "td":
-            if self.col_index == -1:
-                if self.row_span:
-                    self.col_index = 2
-                    self.row_span -= 1
-                else:
-                    self.col_index = 0
+            self.handle_start_of_td_tag(attrs)
 
-                    for attr, value in attrs:
-                        if attr == "rowspan" and isinstance(value, str):
-                            self.row_span = int(value) - 1
-                            break
+    def handle_start_of_tr_tag(self) -> None:
+        """
+        Handle <tr> tag.
 
-                    if self.current_district:
-                        self.result.append(self.current_district.dict())
-                    if self.row_index != 0:
-                        self.current_district = District(date=self.current_date)
+        :return:
+        """
+        self.col_index = -1
+        if self.row_index is None:
+            self.row_index = 0
+        else:
+            self.row_index += 1
+        if self.row_index != 0:
+            if self.current_district and self.current_locality:
+                self.current_district.localities.append(self.current_locality)
+            self.current_locality = Locality()
+
+    def handle_start_of_td_tag(self, attrs: List[Tuple[str, Optional[str]]]) -> None:
+        """
+        Handle <td> tag.
+
+        :param attrs:
+        :return:
+        """
+        if self.col_index == -1:
+            if self.row_span:
+                self.col_index = 2
+                self.row_span -= 1
             else:
-                self.col_index += 1
+                self.col_index = 0
+
+                for attr, value in attrs:
+                    if attr == "rowspan" and isinstance(value, str):
+                        self.row_span = int(value) - 1
+                        break
+
+                if self.current_district:
+                    self.result.append(self.current_district.dict())
+                if self.row_index != 0:
+                    self.current_district = District(date=self.current_date)
+        else:
+            self.col_index += 1
 
     def handle_endtag(self, tag: str) -> None:
         """
@@ -92,14 +113,42 @@ class CovidPageParser(HTMLParser):
         :param data:
         :return:
         """
+        if self.skip_all:
+            return
+
+        if self.current_tag == "h1":
+            date_as_str = data.strip().split().pop()
+            try:
+                self.current_date = get_date_from_str(date_as_str, "%d.%m.%Y")
+            except ValueError:
+                self.error(
+                    f"Failed to parse current date from title. Invalid value: {date_as_str}"
+                )
         if self.current_tag == "td":
             data = data.strip() or "0"
+            if data == "Ленинградская область":
+                # do not parse summary
+                self.skip_all = True
+                self.current_locality = None
+                self.current_district = None
+                return
             if self.row_index == 0:
                 if data in RU_HEADER_TO_PROPERTY:
                     prop = RU_HEADER_TO_PROPERTY[data]
                     self.col_index_to_property[self.col_index] = prop
                 else:
-                    self.current_date = get_date_from_str(data)
+                    try:
+                        current_date_from_table = get_date_from_str(data)
+                        if not self.current_date:
+                            self.current_date = current_date_from_table
+                        elif self.current_date != current_date_from_table:
+                            raise CurrentDatesNotMatchException()
+                    except ValueError:
+                        self.error(
+                            f"Failed to parse current date from table. Invalid value: {data}"
+                        )
+                    if not self.current_date:
+                        raise NoCurrentDateException()
                     self.col_index_to_property[
                         self.col_index
                     ] = PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS
