@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from uuid import uuid4
 
 import pytest
@@ -18,6 +18,13 @@ def test_get_date_from_str():
     assert value_as_datetime.minute == 0
     assert value_as_datetime.second == 0
     assert value_as_datetime.microsecond == 0
+
+
+def test_system_date_equal_parsed_date():
+    date_today = date.today()
+    date_today_as_str = date_today.strftime("%d.%m.%y")
+    value_as_datetime: datetime = get_date_from_str(date_today_as_str)
+    assert date_today == value_as_datetime.date()
 
 
 def test_email_url():

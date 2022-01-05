@@ -117,13 +117,7 @@ class CovidPageParser(HTMLParser):
             return
 
         if self.current_tag == "h1":
-            date_as_str = data.strip().split().pop()
-            try:
-                self.current_date = get_date_from_str(date_as_str, "%d.%m.%Y")
-            except ValueError:
-                self.error(
-                    f"Failed to parse current date from title. Invalid value: {date_as_str}"
-                )
+            self.set_current_date_from_title(data)
         if self.current_tag == "td":
             data = data.strip() or "0"
             if data == "Ленинградская область":
@@ -137,18 +131,11 @@ class CovidPageParser(HTMLParser):
                     prop = RU_HEADER_TO_PROPERTY[data]
                     self.col_index_to_property[self.col_index] = prop
                 else:
-                    try:
-                        current_date_from_table = get_date_from_str(data)
-                        if not self.current_date:
-                            self.current_date = current_date_from_table
-                        elif self.current_date != current_date_from_table:
-                            raise CurrentDatesNotMatchException()
-                    except ValueError:
-                        self.error(
-                            f"Failed to parse current date from table. Invalid value: {data}"
-                        )
+                    self.set_current_date_from_table(data)
                     if not self.current_date:
-                        raise NoCurrentDateException()
+                        raise NoCurrentDateException(
+                            "Failed to get current date from html page."
+                        )
                     self.col_index_to_property[
                         self.col_index
                     ] = PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS
@@ -160,6 +147,41 @@ class CovidPageParser(HTMLParser):
                     setattr(self.current_district, prop, value)
                 else:
                     setattr(self.current_locality, prop, value)
+
+    def set_current_date_from_title(self, data: str) -> None:
+        """
+        Parse date from title.
+
+        :param data:
+        :return:
+        """
+        date_as_str = data.strip().split().pop()
+        try:
+            self.current_date = get_date_from_str(date_as_str, "%d.%m.%Y")
+        except ValueError:
+            self.error(
+                f"Failed to parse current date from title. Invalid value: {date_as_str}"
+            )
+
+    def set_current_date_from_table(self, data: str) -> None:
+        """
+        Parse date from table.
+
+        :param data:
+        :return:
+        """
+        try:
+            current_date_from_table = get_date_from_str(data)
+            if not self.current_date:
+                self.current_date = current_date_from_table
+            elif self.current_date != current_date_from_table:
+                raise CurrentDatesNotMatchException(
+                    f"Date {self.current_date} != {current_date_from_table}"
+                )
+        except ValueError:
+            self.error(
+                f"Failed to parse current date from table. Invalid value: {data}"
+            )
 
     def parse(self, data: str) -> List[DistrictType]:
         """
