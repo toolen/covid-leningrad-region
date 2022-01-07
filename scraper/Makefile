@@ -27,10 +27,12 @@ mypy:
 	poetry run mypy --strict --ignore-missing-imports $(package_name)
 test:
 	poetry run pytest -vv --cov=$(package_name) tests/
-pre-commit:
+fmt:
 	poetry run black .
 	poetry run isort .
-	poetry run flake8 --ignore E501 $(package_name)/ tests/
+pre-commit:
+	make fmt
+	poetry run flake8 --ignore E501,W503 $(package_name)/ tests/
 	make mypy
 	poetry run pydocstyle --add-ignore=D104 $(package_name)/
 	make test

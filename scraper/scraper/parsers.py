@@ -1,5 +1,6 @@
 """This file contains parsers."""
 import logging
+from datetime import date
 from html.parser import HTMLParser
 from typing import Dict, List, Optional, Tuple
 
@@ -9,7 +10,7 @@ from scraper.constants import (
     PROPERTY_TO_TYPE_WRAPPER,
     RU_HEADER_TO_PROPERTY,
 )
-from scraper.exceptions import CurrentDatesNotMatchException, NoCurrentDateException
+from scraper.exceptions import NoCurrentDateException
 from scraper.models import District, Locality
 from scraper.types import DistrictType
 from scraper.utils import get_date_from_str
@@ -132,10 +133,6 @@ class CovidPageParser(HTMLParser):
                     self.col_index_to_property[self.col_index] = prop
                 else:
                     self.set_current_date_from_table(data)
-                    if not self.current_date:
-                        raise NoCurrentDateException(
-                            "Failed to get current date from html page."
-                        )
                     self.col_index_to_property[
                         self.col_index
                     ] = PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS
@@ -157,7 +154,10 @@ class CovidPageParser(HTMLParser):
         """
         date_as_str = data.strip().split().pop()
         try:
-            self.current_date = get_date_from_str(date_as_str, "%d.%m.%Y")
+            system_date = self.get_system_date()
+            date_from_title = get_date_from_str(date_as_str, "%d.%m.%Y")
+            if date_from_title.date() == system_date:
+                self.current_date = date_from_title
         except ValueError:
             self.error(
                 f"Failed to parse current date from title. Invalid value: {date_as_str}"
@@ -171,17 +171,31 @@ class CovidPageParser(HTMLParser):
         :return:
         """
         try:
+            system_date = self.get_system_date()
             current_date_from_table = get_date_from_str(data)
-            if not self.current_date:
+            if not self.current_date and current_date_from_table.date() == system_date:
                 self.current_date = current_date_from_table
-            elif self.current_date != current_date_from_table:
-                raise CurrentDatesNotMatchException(
-                    f"Date {self.current_date} != {current_date_from_table}"
-                )
         except ValueError:
             self.error(
                 f"Failed to parse current date from table. Invalid value: {data}"
             )
+        finally:
+            if not self.current_date:
+                raise NoCurrentDateException(
+                    "Failed to get current date from html page."
+                )
+            # elif self.current_date.date() != date.today():
+            #     raise CurrentDatesNotMatchException(
+            #         f"Date from page: {self.current_date.date()} != system date: {date.today()}"
+            #     )
+
+    def get_system_date(self) -> date:
+        """
+        Return current date from system.
+
+        :return:
+        """
+        return date.today()
 
     def parse(self, data: str) -> List[DistrictType]:
         """
