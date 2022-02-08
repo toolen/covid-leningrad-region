@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class CovidPageParser(HTMLParser):
-    """This class parses an html page with statistics on the incidence of covid."""
+    """This class parses html page with statistics on the incidence of covid."""
 
     row_index = None
     col_index = -1

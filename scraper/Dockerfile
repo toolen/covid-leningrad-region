@@ -1,6 +1,7 @@
-FROM python:3.10.1-slim-bullseye@sha256:9f702aa0f2bd7fe7a43bcf46e487040ba3237f2115994ae74ea7b270479ea8f3 AS builder
+FROM python:3.10.2-slim-bullseye@sha256:e8c51ac54aa716f465eb7293130535307fcfae9b864e433ca60d843561c86ef6 AS builder
 
 LABEL maintainer="dmitrii@zakharov.cc"
+LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
 
 ENV \
     DEBIAN_FRONTEND=noninteractive \
@@ -25,14 +26,12 @@ WORKDIR /code
 
 COPY ./poetry.lock ./pyproject.toml /code/
 
-RUN poetry install --no-dev --no-ansi --no-interaction
+RUN poetry export --no-ansi --no-interaction --output requirements.txt
 
-COPY ./scraper /code/scraper
+FROM python:3.10.2-alpine3.15@sha256:60469fac3d4c1c4781465b18f1a89d8dd2a01af9bb799d17836b972fcc463da9 AS runner
 
-RUN poetry build --no-ansi --no-interaction
-
-
-FROM python:3.10.1-alpine3.15@sha256:affe0faa14e7553fc570beec3864e74b5e36f8c19b2bb49ae8ba79c0e9e7236e AS runner
+LABEL maintainer="dmitrii@zakharov.cc"
+LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
 
 ENV \
     TIME_ZONE=Europe/Moscow \
@@ -43,12 +42,11 @@ ENV \
     # pip:
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100 \
-    # tini:
-    TINI_VERSION=v0.19.0
+    PIP_DEFAULT_TIMEOUT=100
 
-RUN apk add --no-cache \
-#        curl==7.80.0-r0 \
+RUN set -ex \
+    && apk upgrade \
+    && apk add --no-cache \
         tini==0.19.0-r0 \
     && cp /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime \
     && echo "${TIME_ZONE}" > /etc/timezone \
@@ -56,7 +54,7 @@ RUN apk add --no-cache \
     && addgroup -g 1000 -S app \
     && adduser -h /app -G app -S -u 1000 app
 
-COPY --chown=app:app --from=builder /code/dist/scraper-*.whl /app
+COPY --chown=app:app --from=builder /code/requirements.txt /app
 
 WORKDIR /app
 
@@ -64,8 +62,8 @@ USER app
 
 RUN set -ex \
     && python -m venv venv \
-    && venv/bin/pip install --no-cache-dir --target /app/scraper -- scraper-*.whl
+    && venv/bin/pip install --no-cache-dir --require-hashes -r requirements.txt
 
-WORKDIR /app/scraper
+COPY ./scraper /app/scraper
 
 CMD ["/sbin/tini", "--", "/app/venv/bin/python", "-m", "scraper.main"]

@@ -3,7 +3,7 @@ repository = toolen/scraper
 version = $(shell poetry version -s)
 tag = $(repository):$(version)
 hadolint_version=2.8.0
-trivy_version=0.22.0
+trivy_version=0.23.0
 
 image:
 	export DOCKER_BUILDKIT=1
@@ -20,18 +20,26 @@ size:
 hadolint:
 	docker run --rm -i hadolint/hadolint:$(hadolint_version) < Dockerfile
 trivy:
-	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v ~/.cache/trivy:/root/.cache/ aquasec/trivy:$(trivy_version) --ignore-unfixed $(tag)
+	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v ~/.cache/trivy:/root/.cache/ aquasec/trivy:$(trivy_version) image --ignore-unfixed $(tag)
 push:
 	docker trust sign $(tag)
 mypy:
-	poetry run mypy --strict --ignore-missing-imports $(package_name)
+	poetry run mypy $(package_name)
 test:
 	poetry run pytest -vv --cov=$(package_name) tests/
 fmt:
 	poetry run black .
 	poetry run isort .
+fmt-check:
+	poetry run black . --check
+	poetry run isort . --check
 pre-commit:
 	make fmt
+	make lint
+ci:
+	make fmt-check
+	make lint
+lint:
 	poetry run flake8 --ignore E501,W503 $(package_name)/ tests/
 	make mypy
 	poetry run pydocstyle --add-ignore=D104 $(package_name)/

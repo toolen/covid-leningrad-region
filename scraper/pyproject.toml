@@ -1,30 +1,36 @@
 [tool.poetry]
 name = "scraper"
-version = "1.1.7"
+version = "1.1.8"
 description = ""
 authors = ["Dmitrii Zakharov <dmitrii@zakharov.cc>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-schedule = "^1.1.0"
-pydantic = "^1.8.2"
-pymongo = {version = "^3.11.3", extras = ["srv"]}
+schedule = "1.1.0"
+pydantic = "1.8.2"
+pymongo = {version = "3.11.3", extras = ["srv"]}
+tenacity = "8.0.1"
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.2.5"
-pytest-cov = "^3.0.0"
-black = "^21.10b0"
-isort = "^5.10.1"
-flake8 = "^4.0.1"
-pydocstyle = "^6.1.1"
-bandit = "^1.7.1"
-safety = "^1.10.3"
-mypy = "^0.910"
-radon = "^5.1.0"
+pytest = "6.2.5"
+pytest-cov = "3.0.0"
+black = "22.1.0"
+isort = "5.10.1"
+flake8 = "4.0.1"
+pydocstyle = "6.1.1"
+bandit = "1.7.2"
+safety = "1.10.3"
+mypy = "0.931"
+radon = "5.1.0"
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+implicit_reexport = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.isort]
-profile = "black"

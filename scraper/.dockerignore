@@ -1,8 +1,7 @@
-/certs
-/dist
-.mypy_cache/
-.pytest_cache/
-.idea
-.coverage
-.bash_history
-*.iml
+# Ignore everything
+**
+
+# Allow files and directories
+!/scraper
+!/poetry.lock
+!/pyproject.toml

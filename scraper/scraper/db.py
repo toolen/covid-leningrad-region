@@ -5,9 +5,9 @@ from typing import Dict, List, Optional, Union, cast
 from pymongo import MongoClient, UpdateOne
 from pymongo.collection import Collection
 from pymongo.errors import BulkWriteError
+from tenacity import retry, wait_fixed
 
 from scraper.constants import PROPERTY_DISTRICT, PROPERTY_DISTRICT_DATE
-from scraper.decorators import retry_on_failure
 from scraper.types import DistrictType
 
 logger = logging.getLogger(__name__)
@@ -44,7 +44,7 @@ class DBWrapper:
         self.collection_name = collection_name
         self.client = self.get_client(uri, tls)
 
-    @retry_on_failure()
+    @retry(wait=wait_fixed(5))
     def get_client(self, uri: str, tls: Dict[str, Union[bool, str]]) -> MongoClient:
         """
         Return MongoClient instance.
