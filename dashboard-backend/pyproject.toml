@@ -6,11 +6,30 @@ authors = ["Dmitrii Zakharov <dmitrii@zakharov.cc>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-aiohttp = "^3.8.0"
-motor = "^2.5.1"
+aiohttp = "3.8.1"
+motor = "2.5.1"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest-cov = "3.0.0"
+black = "22.1.0"
+isort = "5.10.1"
+flake8 = "4.0.1"
+pydocstyle = "6.1.1"
+bandit = "1.7.2"
+safety = "1.10.3"
+mypy = "0.931"
+radon = "5.1.0"
+pytest-aiohttp = "1.0.4"
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

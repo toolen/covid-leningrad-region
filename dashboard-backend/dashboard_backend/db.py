@@ -1,103 +1,191 @@
-from typing import List, Dict, Union
+"""This file contains database wrapper."""
+import logging
+from typing import Dict, List, Optional, Union, cast
 
 from aiohttp import web
-from pymongo import MongoClient
-from pymongo.collection import Collection
+from motor.core import AgnosticClient
+from motor.motor_asyncio import (
+    AsyncIOMotorClient,
+    AsyncIOMotorCollection,
+    AsyncIOMotorDatabase,
+)
+from pymongo import DESCENDING
+
+logger = logging.getLogger(__name__)
 
 
 class DBWrapper:
-    client = None
-    db_name = None
-    collection_name = None
-    reference_date = None
+    """Class to represent database wrapper."""
 
-    def __init__(self, uri, db_name, collection_name, tls_cert_key_path=None, tls_ca_path=None) -> None:
-        tls = {}
-        if tls_cert_key_path:
-            tls['tls'] = True
-            tls['tlsCertificateKeyFile'] = tls_cert_key_path
-            if tls_ca_path:
-                tls['tlsCAFile'] = tls_ca_path
+    reference_date: Optional[str] = None
 
-        self.db_name = db_name
-        self.collection_name = collection_name
-        self.client = MongoClient(
-            uri,
-            connectTimeoutMS=1000,
-            retryWrites=True,
-            **tls
+    def __init__(
+        self,
+        url: str,
+        db_name: str,
+        collection_name: str,
+        tls_cert_key_path: Optional[str] = None,
+        tls_ca_path: Optional[str] = None,
+    ) -> None:
+        """
+        Construct DBWrapper instance.
+
+        :param url:
+        :param db_name:
+        :param collection_name:
+        :param tls_cert_key_path:
+        :param tls_ca_path:
+        """
+        tls: Dict[str, Union[str, bool, None]] = {}
+        if bool(tls_cert_key_path):
+            tls["tls"] = True
+            tls["tlsCertificateKeyFile"] = tls_cert_key_path
+            if bool(tls_ca_path):
+                tls["tlsCAFile"] = tls_ca_path
+
+        self.client: AgnosticClient = AsyncIOMotorClient(
+            url, connectTimeoutMS=1000, retryWrites=True, **tls
         )
+        self.db: AsyncIOMotorDatabase = self.client[db_name]
+        self.collection: AsyncIOMotorCollection = self.db[collection_name]
+        self.is_closed = False
 
-        self.reference_date = self.get_reference_date()
-
-    def get_collection(self) -> Collection:
-        return self.client[self.db_name][self.collection_name]
-
-    def close(self):
+    def close(self) -> None:
+        """Close database connection."""
         self.client.close()
+        self.is_closed = True
 
-    def get_reference_date(self):
-        reference_date = self.get_collection().find_one(
-            filter={},
-            projection={'_id': 0, 'date': 1},
-            sort={'date': -1},
-        ).get('date')
+    async def drop_collection(self, collection_name: str) -> None:
+        """
+        Drop collection by name.
+
+        :param collection_name:
+        :return:
+        """
+        await self.db[collection_name].drop()
+
+    async def get_reference_date(self) -> Optional[str]:
+        """
+        Return last date from database.
+
+        :return:
+        """
+        if not self.reference_date:
+            result = await self.collection.find_one(
+                filter={},
+                projection={"_id": 0, "date": 1},
+                sort=[("date", DESCENDING)],
+            )
+            if result:
+                self.reference_date = result.get("date")
+        return self.reference_date
+
+    async def get_districts(self) -> List[str]:
+        """
+        Return list of districts.
+
+        :return:
+        """
+        reference_date = await self.get_reference_date()
         if reference_date:
-            return reference_date
+            return cast(
+                List[str],
+                await self.collection.distinct(
+                    "district", filter={"date": reference_date}
+                ),
+            )
         else:
-            raise Exception()
+            logger.error("Failed to get reference date.")
+            return []
 
-    def get_districts(self) -> List[str]:
-        collection = self.get_collection()
-        return collection.distinct('district', filter={'date': self.reference_date}, sort=('district',))
-        # return list(map(lambda x: x.get('district'), collection.find(
-        #     filter={'date': yesterday},
-        #     projection={'_id': 0, 'district': 1},
-        #     sort=('district',),
-        # )))
+    async def get_localities(self, district_name: str) -> List[str]:
+        """
+        Return list of district localities.
 
-    def get_localities(self, district_name):
-        collection = self.get_collection()
-        return collection.distinct(
-            'localities.locality',
-            filter={'date': self.reference_date, 'district': district_name},
-            sort=('localities.locality',)
+        :param district_name:
+        :return:
+        """
+        reference_date = await self.get_reference_date()
+        if reference_date:
+            return cast(
+                List[str],
+                await self.collection.distinct(
+                    "localities.locality",
+                    filter={"date": reference_date, "district": district_name},
+                ),
+            )
+        else:
+            logger.error("Failed to get reference date.")
+            return []
+
+    def get_district(
+        self, district_name: str
+    ) -> List[Dict[str, Union[str, int, float]]]:
+        """
+        Return data by district name.
+
+        :param district_name:
+        :return:
+        """
+        return cast(
+            List[Dict[str, Union[str, int, float]]],
+            self.collection.find(
+                filter={"district": district_name},
+                projection={"_id": 0, "localities": 0},
+                sort=("date",),
+            ),
         )
-        # return collection.find(
-        #     filter={'district': district_name},
-        #     projection={'_id': 0, 'localities.locality': 1},
-        #     sort=('date',),
-        # )
 
-    def get_district(self, district_name: str) -> List[Dict[str, Union[str, int, float]]]:
-        collection = self.get_collection()
-        return collection.find(
-            filter={'district': district_name},
-            projection={'_id': 0, 'localities': 0},
-            sort=('date',),
-        )
+    def get_locality(self, district_name: str, locality_name: str) -> List[str]:
+        """
+        Return locality data by district and locality names.
 
-    def get_locality(self, district_name: str, locality_name: str):
-        collection = self.get_collection()
-        return collection.find(
-            filter={'district': district_name, 'localities.locality': locality_name},
-            projection={'date': 1, 'localities': {"$elemMatch": {'locality': 'г. Бокситогорск'}}},
-            sort=('date',),
+        :param district_name:
+        :param locality_name:
+        :return:
+        """
+        return cast(
+            List[str],
+            self.collection.find(
+                filter={
+                    "district": district_name,
+                    "localities.locality": locality_name,
+                },
+                projection={
+                    "date": 1,
+                    "localities": {"$elemMatch": {"locality": locality_name}},
+                },
+                sort=("date",),
+            ),
         )
 
 
 async def close_db(app: web.Application) -> None:
-    db = app['db']
+    """
+    Close connection with database.
+
+    :param app:
+    :return:
+    """
+    db = app["db"]
     db.close()
 
 
 def init_db(app: web.Application) -> None:
-    db_uri = app['config']['DB_URI']
-    db_name = app['config']['DB_NAME']
-    collection_name = app['config']['DB_COLLECTION_NAME']
-    tls_cert_key_path = app['config']['TLS_CERT_KEY_PATH']
-    tls_ca_path = app['config']['TLS_CA_PATH']
+    """
+    Initialize database wrapper.
 
-    app['db'] = DBWrapper(db_uri, db_name, collection_name, tls_cert_key_path, tls_ca_path)
+    :param app:
+    :return:
+    """
+    db_uri = app["config"]["DB_URI"]
+    db_name = app["config"]["DB_NAME"]
+    collection_name = app["config"]["DB_COLLECTION_NAME"]
+    tls_cert_key_path = app["config"]["TLS_CERT_KEY_PATH"]
+    tls_ca_path = app["config"]["TLS_CA_PATH"]
+
+    app["db"] = DBWrapper(
+        db_uri, db_name, collection_name, tls_cert_key_path, tls_ca_path
+    )
 
     app.on_cleanup.append(close_db)
