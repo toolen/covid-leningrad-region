@@ -29,13 +29,14 @@ openssl verify -CAfile "$CA_DIR"/ca.crt "$MONGODB_DIR"/mongo.crt
 chmod 644 "$MONGODB_DIR"/mongo.*
 cat "$MONGODB_DIR"/mongo.crt "$MONGODB_DIR"/mongo.key > "$MONGODB_DIR"/mongo.pem
 
-# User
+# Scraper
 echo "> Generating x.509 certificate for user \"scraper\""
 openssl genrsa -out "$SCRAPER_DIR"/scraper.key 2048
 openssl req -sha256 -new -subj "/CN=scraper" -key "$SCRAPER_DIR"/scraper.key -out "$SCRAPER_DIR"/scraper.csr
 openssl x509 -sha256 -req -passin env:CA_PASS -in "$SCRAPER_DIR"/scraper.csr -CA "$CA_DIR"/ca.crt -CAkey "$CA_DIR"/ca.key -CAcreateserial -out "$SCRAPER_DIR"/scraper.crt -days 365
 cat "$SCRAPER_DIR"/scraper.crt "$SCRAPER_DIR"/scraper.key > "$SCRAPER_DIR"/scraper.pem
 
+# Dashboard
 echo "> Generating x.509 certificate for user \"dashboard\""
 openssl genrsa -out "$DASHBOARD_DIR"/dashboard.key 2048
 openssl req -sha256 -new -subj "/CN=dashboard" -key "$DASHBOARD_DIR"/dashboard.key -out "$DASHBOARD_DIR"/dashboard.csr
