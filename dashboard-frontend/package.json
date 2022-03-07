@@ -11,8 +11,7 @@
     "vite": "^2.8.0"
   },
   "dependencies": {
-    "ag-charts-community": "^5.0.0",
-    "chart.js": "^3.7.1",
-    "uplot": "^1.6.19"
+    "@picocss/pico": "^1.4.4",
+    "ag-charts-community": "^5.0.0"
   }
 }

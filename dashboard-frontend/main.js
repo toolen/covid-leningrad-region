@@ -1,8 +1,11 @@
-import './style.css'
+import '@picocss/pico/css/pico.min.css';
+import './style.css';
 
 import * as agCharts from "ag-charts-community";
 
-const API_ENDPOINT = 'http://localhost:8080/api/v1'
+const API_ENDPOINT = 'http://localhost:8080/api/v1';
+const LS_DISTRICT = 'districtName';
+const LS_LOCALITY = 'localityName';
 
 const districtEl = document.querySelector('#district');
 const localityEl = document.querySelector('#locality');
@@ -11,11 +14,6 @@ let chart = null;
 
 function makeRequest(url, callback) {
     const httpRequest = new XMLHttpRequest();
-
-    if (!httpRequest) {
-        // err.innerText = 'Giving up :( Cannot create an XMLHTTP instance';
-        return false;
-    }
     httpRequest.onreadystatechange = function () {
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             const data = httpRequest.response;
@@ -33,8 +31,11 @@ function makeRequest(url, callback) {
 }
 
 function fillDistrictSelect() {
-    makeRequest(`${API_ENDPOINT}/districts`, function(districts) {
-        const options = districts.map((value) => `<option value="${value}">${value}</option>`);
+    makeRequest(`${API_ENDPOINT}/districts`, function (districts) {
+        const selectedDistrict = localStorage.getItem(LS_DISTRICT) || "";
+        const options = districts.map((value) => {
+            return `<option value="${value}" ${selectedDistrict === value ? 'selected' : ''}>${value}</option>`;
+        });
         districtEl.innerHTML = options.join("");
         fillLocalitiesSelect(districtEl.value);
     })
@@ -44,7 +45,10 @@ function fillLocalitiesSelect(districtName) {
     if (districtName) {
         const districtNameEncoded = encodeURIComponent(districtName);
         makeRequest(`${API_ENDPOINT}/districts/${districtNameEncoded}/localities`, function (localities) {
-            const options = localities.map((value) => `<option value="${value}">${value}</option>`);
+            const selectedLocality = localStorage.getItem(LS_LOCALITY) || "";
+            const options = localities.map((value) => {
+                return `<option value="${value}" ${selectedLocality === value ? 'selected' : ''}>${value}</option>`
+            });
             localityEl.innerHTML = options.join("");
             loadData(districtName, localityEl.value);
         })
@@ -135,12 +139,14 @@ function loadData(districtName, localityName) {
 
 districtEl.addEventListener("change", function (e) {
     const districtName = e.target.value;
+    localStorage.setItem(LS_DISTRICT, districtName);
     fillLocalitiesSelect(districtName)
 })
 
 localityEl.addEventListener("change", function (e) {
     const districtName = districtEl.value;
     const localityName = e.target.value;
+    localStorage.setItem(LS_LOCALITY, localityName);
     loadData(districtName, localityName)
 })
 
