@@ -9,7 +9,7 @@ from motor.motor_asyncio import (
     AsyncIOMotorCollection,
     AsyncIOMotorDatabase,
 )
-from pymongo import DESCENDING
+from pymongo import ASCENDING, DESCENDING
 
 logger = logging.getLogger(__name__)
 
@@ -118,7 +118,7 @@ class DBWrapper:
             logger.error("Failed to get reference date.")
             return []
 
-    def get_district(
+    async def get_district(
         self, district_name: str
     ) -> List[Dict[str, Union[str, int, float]]]:
         """
@@ -129,14 +129,14 @@ class DBWrapper:
         """
         return cast(
             List[Dict[str, Union[str, int, float]]],
-            self.collection.find(
+            await self.collection.find(
                 filter={"district": district_name},
                 projection={"_id": 0, "localities": 0},
                 sort=("date",),
             ),
         )
 
-    def get_locality(self, district_name: str, locality_name: str) -> List[str]:
+    async def get_locality(self, district_name: str, locality_name: str) -> List[str]:
         """
         Return locality data by district and locality names.
 
@@ -146,18 +146,28 @@ class DBWrapper:
         """
         return cast(
             List[str],
-            self.collection.find(
+            await self.collection.find(
                 filter={
                     "district": district_name,
                     "localities.locality": locality_name,
                 },
                 projection={
+                    "_id": 0,
                     "date": 1,
                     "localities": {"$elemMatch": {"locality": locality_name}},
                 },
-                sort=("date",),
-            ),
+                sort=[("date", ASCENDING)],
+            ).to_list(length=100),
         )
+
+
+# class MongoEncoder(JSONEncoder):
+#
+#     def encode(self, o: Any) -> str:
+#         if isinstance(o, datetime.datetime):
+#             return o.__str__()
+#         else:
+#             return super().encode(o)
 
 
 async def close_db(app: web.Application) -> None:

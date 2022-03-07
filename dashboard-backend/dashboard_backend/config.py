@@ -1,6 +1,6 @@
 """This file contains config methods."""
 import os
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 from aiohttp import web
 
@@ -10,7 +10,9 @@ CERTS_DIR = os.path.join(BASE_DIR, "certs")
 env = os.environ
 
 
-def get_config(override_config: Optional[Dict[str, str]] = None) -> Dict[str, str]:
+def get_config(
+    override_config: Optional[Dict[str, str]] = None
+) -> Dict[str, Union[str, bool]]:
     """
     Return application configuration.
 
@@ -39,6 +41,8 @@ def get_config(override_config: Optional[Dict[str, str]] = None) -> Dict[str, st
         ),
         "TLS_CA_PATH": os.getenv("DASHBOARD_BACKEND_TLS_CA_PATH", default_ca_path),
         "LOG_LEVEL": os.getenv("DASHBOARD_BACKEND_LOG_LEVEL", "DEBUG"),
+        "CORS_ENABLED": os.getenv("DASHBOARD_BACKEND_CORS_ENABLED", True),
+        "CORS_ORIGIN": os.getenv("DASHBOARD_BACKEND_CORS_ORIGIN", "*"),
     }
 
     if override_config:

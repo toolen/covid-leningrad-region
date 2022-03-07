@@ -8,6 +8,7 @@ authors = ["Dmitrii Zakharov <dmitrii@zakharov.cc>"]
 python = "^3.8"
 aiohttp = "3.8.1"
 motor = "2.5.1"
+aiohttp_cors = "0.7.0"
 
 [tool.poetry.dev-dependencies]
 pytest-cov = "3.0.0"
