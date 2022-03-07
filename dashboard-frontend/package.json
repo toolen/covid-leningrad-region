@@ -1,0 +1,18 @@
+{
+  "name": "dashboard-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^2.8.0"
+  },
+  "dependencies": {
+    "ag-charts-community": "^5.0.0",
+    "chart.js": "^3.7.1",
+    "uplot": "^1.6.19"
+  }
+}
