@@ -1,0 +1,53 @@
+name: scraper
+
+on: [push]
+
+jobs:
+  ci:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10
+
+      - name: Change directory
+        run: cd scraper
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.3.1
+        with:
+          version: 1.1.12
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: poetry install --no-ansi --no-interaction
+
+      - name: Setup enviroment variables
+        run: export SCRAPER_DB_URI="mongodb://localhost:27017/db"
+
+      - name: Run make
+        run: make ci
+
+      - name: Build image
+        run: make image
+
+      - name: Push image
+        if: ${{ github.ref_name == 'master' }}
+        env:
+          CR_PAT: ${{ secrets.CR_PAT }}
+        run: make push-to-ghcr
+
+    services:
+      mongo:
+        image: mongo:4.4.9
+        ports:
+          - 27017:27017
