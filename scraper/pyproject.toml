@@ -7,18 +7,21 @@ authors = ["Dmitrii Zakharov <dmitrii@zakharov.cc>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 schedule = "1.1.0"
-pydantic = "1.8.2"
+pydantic = "1.9.0"
 pymongo = {version = "3.11.3", extras = ["srv"]}
 tenacity = "8.0.1"
+Sphinx = "^4.4.0"
+sphinx-rtd-theme = "^1.0.0"
+sphinx-autoapi = "^1.8.4"
 
 [tool.poetry.dev-dependencies]
-pytest = "6.2.5"
+pytest = "7.0.1"
 pytest-cov = "3.0.0"
 black = "22.1.0"
 isort = "5.10.1"
 flake8 = "4.0.1"
 pydocstyle = "6.1.1"
-bandit = "1.7.2"
+bandit = "1.7.4"
 safety = "1.10.3"
 mypy = "0.931"
 radon = "5.1.0"
