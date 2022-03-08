@@ -7,6 +7,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      SCRAPER_DB_URI: mongodb://localhost:27017/db
+
     defaults:
       run:
         working-directory: ./scraper
@@ -31,9 +34,6 @@ jobs:
 
       - name: Install dependencies
         run: poetry install --no-ansi --no-interaction
-
-      - name: Setup enviroment variables
-        run: export SCRAPER_DB_URI="mongodb://localhost:27017/db"
 
       - name: Run make
         run: make ci
