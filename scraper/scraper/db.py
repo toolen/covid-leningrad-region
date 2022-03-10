@@ -27,11 +27,11 @@ class DBWrapper:
         """
         Construct the DBWrapper class.
 
-        :param uri:
-        :param db_name:
-        :param collection_name:
-        :param tls_cert_key_path:
-        :param tls_ca_path:
+        :param uri: connection string
+        :param db_name: database name
+        :param collection_name: collection name
+        :param tls_cert_key_path: path to TLS key certificate
+        :param tls_ca_path: path to CA certificate
         """
         tls: Dict[str, Union[bool, str]] = {}
         if tls_cert_key_path:
@@ -49,9 +49,9 @@ class DBWrapper:
         """
         Return MongoClient instance.
 
-        :param uri:
-        :param tls:
-        :return:
+        :param uri: connection string.
+        :param tls: TLS options.
+        :return: MongoClient instance.
         """
         return MongoClient(
             uri,
@@ -66,7 +66,7 @@ class DBWrapper:
         """
         Return default collection from database.
 
-        :return:
+        :return: Collection
         """
         return self.client[self.db_name][self.collection_name]
 
@@ -74,7 +74,7 @@ class DBWrapper:
         """
         Drop default collection.
 
-        :return:
+        :return: None
         """
         collection = self.get_collection()
         collection.drop()
@@ -83,7 +83,7 @@ class DBWrapper:
         """
         Return size of default collection.
 
-        :return:
+        :return: None
         """
         collection = self.get_collection()
         return cast(int, collection.estimated_document_count())
@@ -92,7 +92,7 @@ class DBWrapper:
         """
         Close database connection.
 
-        :return:
+        :return: None
         """
         self.client.close()
 
@@ -100,8 +100,8 @@ class DBWrapper:
         """
         Save data into database.
 
-        :param data:
-        :return:
+        :param data: data to save.
+        :return: None
         """
         operations = []
         for district in data:

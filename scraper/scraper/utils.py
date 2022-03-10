@@ -10,9 +10,9 @@ def get_date_from_str(date: str, format_: str = "%d.%m.%y") -> datetime:
     """
     Covert string to datetime.
 
-    :param date:
-    :param format_:
-    :return:
+    :param date: date as string.
+    :param format_: format string.
+    :return: None
     """
     return datetime.strptime(date, format_)
 
@@ -21,10 +21,8 @@ def email_url(url: Optional[str]) -> Dict[str, Union[str, int, bool]]:
     """
     Parse url to dict.
 
-    :param url:
-    :type url:
-    :return:
-    :rtype:
+    :param url: url string of email server.
+    :return: Dict of connection parameters.
     """
     if url:
         login = ""
@@ -63,8 +61,8 @@ def avoid_empty_value(value: Optional[str]) -> str:
     """
     Rise ImproperlyConfiguredException if value is empty.
 
-    :param value:
-    :return:
+    :param value: any value.
+    :return: value if not empty.
     """
     if value:
         return value

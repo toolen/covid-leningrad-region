@@ -36,9 +36,9 @@ class CovidPageParser(HTMLParser):
         """
         Handle start tag.
 
-        :param tag:
-        :param attrs:
-        :return:
+        :param tag: tag name.
+        :param attrs: tag attributes.
+        :return: None
         """
         if self.skip_all:
             return
@@ -55,7 +55,7 @@ class CovidPageParser(HTMLParser):
         """
         Handle <tr> tag.
 
-        :return:
+        :return: None
         """
         self.col_index = -1
         if self.row_index is None:
@@ -71,8 +71,8 @@ class CovidPageParser(HTMLParser):
         """
         Handle <td> tag.
 
-        :param attrs:
-        :return:
+        :param attrs: tag attributes
+        :return: None
         """
         if self.col_index == -1:
             if self.row_span:
@@ -97,8 +97,8 @@ class CovidPageParser(HTMLParser):
         """
         Handle end tag.
 
-        :param tag:
-        :return:
+        :param tag: tag name
+        :return: None
         """
         if tag == "table":
             if self.current_district and self.current_locality:
@@ -111,8 +111,8 @@ class CovidPageParser(HTMLParser):
         """
         Handle text within tag.
 
-        :param data:
-        :return:
+        :param data: innerHTML
+        :return: None
         """
         if self.skip_all:
             return
@@ -149,8 +149,8 @@ class CovidPageParser(HTMLParser):
         """
         Parse date from title.
 
-        :param data:
-        :return:
+        :param data: date as string
+        :return: None
         """
         date_as_str = data.strip().split().pop()
         try:
@@ -167,8 +167,8 @@ class CovidPageParser(HTMLParser):
         """
         Parse date from table.
 
-        :param data:
-        :return:
+        :param data: date as string
+        :return: None
         """
         try:
             system_date = self.get_system_date()
@@ -193,7 +193,7 @@ class CovidPageParser(HTMLParser):
         """
         Return current date from system.
 
-        :return:
+        :return: datetime instance.
         """
         return date.today()
 
@@ -201,8 +201,8 @@ class CovidPageParser(HTMLParser):
         """
         Return parsed data.
 
-        :param data:
-        :return:
+        :param data: raw text of html page.
+        :return: list of dicts.
         """
         super().feed(data)
         return self.result
@@ -211,7 +211,7 @@ class CovidPageParser(HTMLParser):
         """
         Handle parser error.
 
-        :param message:
-        :return:
+        :param message: error message.
+        :return: None
         """
         logger.error(message)

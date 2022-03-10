@@ -39,8 +39,8 @@ def get_html_page(url: str) -> str:
     """
     Return HTML page by url.
 
-    :param url:
-    :return:
+    :param url: html page url.
+    :return: HTML page as text.
     """
     if url.startswith("http://") or url.startswith("https://"):
         req = Request(url)
@@ -61,7 +61,7 @@ def job() -> None:
     """
     Parse HTML page and save data into database.
 
-    :return:
+    :return: None
     """
     logger.info("Run job.")
     try:
@@ -98,7 +98,7 @@ def graceful_shutdown(signum: int, frame: Optional[FrameType]) -> None:
     """
     Cleanup application before shutdown.
 
-    :return:
+    :return: None
     """
     global is_active
     is_active = False
@@ -108,7 +108,7 @@ def main() -> None:
     """
     Start application.
 
-    :return:
+    :return: None
     """
     logger.info("Scraper started.")
 

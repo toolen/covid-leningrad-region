@@ -10,8 +10,8 @@ def send_message_to_admin(text: str) -> None:
     """
     Send email to application admin.
 
-    :param text:
-    :return:
+    :param text: mail message.
+    :return: None
     """
     sender_mail = DEFAULT_FROM_EMAIL
 
