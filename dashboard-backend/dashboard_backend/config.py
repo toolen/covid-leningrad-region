@@ -16,8 +16,8 @@ def get_config(
     """
     Return application configuration.
 
-    :param override_config:
-    :return:
+    :param override_config: dict to override initial configuration.
+    :return: None
     """
     default_tls_cert_key_path = f"{CERTS_DIR}/dashboard.pem"
     if not os.path.exists(default_tls_cert_key_path):
@@ -57,9 +57,9 @@ def init_config(
     """
     Initialize application configuration.
 
-    :param app:
-    :param override_config:
-    :return:
+    :param app: application instance.
+    :param override_config: dictionary that override config.
+    :return: None
     """
     config = get_config(override_config)
     app["config"] = config

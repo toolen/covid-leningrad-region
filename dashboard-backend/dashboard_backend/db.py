@@ -30,11 +30,11 @@ class DBWrapper:
         """
         Construct DBWrapper instance.
 
-        :param url:
-        :param db_name:
-        :param collection_name:
-        :param tls_cert_key_path:
-        :param tls_ca_path:
+        :param url: connection url string.
+        :param db_name: database name.
+        :param collection_name: collection name.
+        :param tls_cert_key_path: path to certificate key.
+        :param tls_ca_path: path to CA certificate.
         """
         tls: Dict[str, Union[str, bool, None]] = {}
         if bool(tls_cert_key_path):
@@ -59,8 +59,8 @@ class DBWrapper:
         """
         Drop collection by name.
 
-        :param collection_name:
-        :return:
+        :param collection_name: collection name.
+        :return: None
         """
         await self.db[collection_name].drop()
 
@@ -68,7 +68,7 @@ class DBWrapper:
         """
         Return last date from database.
 
-        :return:
+        :return: last date as string.
         """
         if not self.reference_date:
             result = await self.collection.find_one(
@@ -84,7 +84,7 @@ class DBWrapper:
         """
         Return list of districts.
 
-        :return:
+        :return: list of districts.
         """
         reference_date = await self.get_reference_date()
         if reference_date:
@@ -102,8 +102,8 @@ class DBWrapper:
         """
         Return list of district localities.
 
-        :param district_name:
-        :return:
+        :param district_name: district name.
+        :return: list of localities.
         """
         reference_date = await self.get_reference_date()
         if reference_date:
@@ -124,7 +124,7 @@ class DBWrapper:
         """
         Return data by district name.
 
-        :param district_name:
+        :param district_name: district name.
         :return:
         """
         return cast(
@@ -140,9 +140,9 @@ class DBWrapper:
         """
         Return locality data by district and locality names.
 
-        :param district_name:
-        :param locality_name:
-        :return:
+        :param district_name: district name.
+        :param locality_name: locality name.
+        :return: list of districts localities.
         """
         return cast(
             List[str],
@@ -161,21 +161,12 @@ class DBWrapper:
         )
 
 
-# class MongoEncoder(JSONEncoder):
-#
-#     def encode(self, o: Any) -> str:
-#         if isinstance(o, datetime.datetime):
-#             return o.__str__()
-#         else:
-#             return super().encode(o)
-
-
 async def close_db(app: web.Application) -> None:
     """
     Close connection with database.
 
-    :param app:
-    :return:
+    :param app: application instance.
+    :return: None
     """
     db = app["db"]
     db.close()
@@ -185,8 +176,8 @@ def init_db(app: web.Application) -> None:
     """
     Initialize database wrapper.
 
-    :param app:
-    :return:
+    :param app: application instance.
+    :return: None
     """
     db_uri = app["config"]["DB_URI"]
     db_name = app["config"]["DB_NAME"]

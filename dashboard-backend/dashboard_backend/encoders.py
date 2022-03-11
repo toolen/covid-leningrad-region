@@ -11,8 +11,8 @@ class MongoEncoder(json.JSONEncoder):
         """
         Convert to JSON value.
 
-        :param o:
-        :return:
+        :param o: any object.
+        :return: serialized object.
         """
         if isinstance(o, datetime.datetime):
             return o.isoformat()
@@ -24,7 +24,7 @@ def mongo_dumps(data: Any) -> str:
     """
     Serialize ``obj`` to a JSON formatted ``str``.
 
-    :param data:
-    :return:
+    :param data: data to serialize.
+    :return: serialized data.
     """
     return json.dumps(data, cls=MongoEncoder)
