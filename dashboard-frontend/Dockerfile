@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN mkdir /app
 
-COPY package.json package-lock.json /app/
+COPY package.json package-lock.json vite.config.js /app/
 
 COPY src /app/src
 

@@ -13,6 +13,8 @@ image:
 	make size
 container:
 	docker run --cap-drop=ALL $(image_tag)
+connect:
+	docker run -it --cap-drop=ALL $(image_tag) /bin/bash
 size:
 	docker images | grep $(repository) | grep $(version)
 hadolint:
