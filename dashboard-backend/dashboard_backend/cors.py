@@ -28,7 +28,7 @@ def init_cors(app: web.Application) -> None:
     """
     Initialize application with CORS.
 
-    :param web.Application app: instance of application
+    :param web.Application app: instance of application.
     :return: None
     """
     cors_origin = app["config"]["CORS_ORIGIN"]

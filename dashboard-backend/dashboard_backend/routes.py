@@ -4,6 +4,15 @@ from aiohttp import web
 from dashboard_backend.encoders import mongo_dumps
 
 
+async def health_handler(request: web.Request) -> web.Response:
+    """
+    Return healthcheck response.
+
+    :return: Response
+    """
+    return web.json_response({"health": "ok"})
+
+
 async def districts_handler(request: web.Request) -> web.Response:
     """
     Return list of districts.
@@ -61,6 +70,7 @@ def init_routes(app: web.Application) -> None:
     """
     app.add_routes(
         [
+            web.get("/api/v1/health", health_handler, name="health"),
             web.get("/api/v1/districts", districts_handler),
             web.get("/api/v1/districts/{district_name}", district_name_handler),
             web.get("/api/v1/districts/{district_name}/localities", localities_handler),

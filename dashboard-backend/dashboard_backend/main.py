@@ -1,6 +1,5 @@
 """This file contains entrypoint of application."""
 import argparse
-import asyncio
 import logging
 import sys
 from typing import Dict, Optional
@@ -21,7 +20,7 @@ def init_logging(app: web.Application) -> None:
     """
     Initialize application logging.
 
-    :param app: application instance
+    :param app: application instance.
     :return: None
     """
     log_level = app["config"]["LOG_LEVEL"]
@@ -36,8 +35,8 @@ def init_app(config: Optional[Dict[str, str]] = None) -> web.Application:
     """
     Initialize application.
 
-    :param config:
-    :return:
+    :param config: dictionary.
+    :return: application instance.
     """
     app = web.Application()
 
@@ -55,12 +54,11 @@ def main() -> None:
     """
     Run application.
 
-    :return:
+    :return: None
     """
     app = init_app()
     args = parser.parse_args()
-    loop = asyncio.get_event_loop()
-    web.run_app(app, loop=loop, host=args.host, port=args.port)
+    web.run_app(app, host=args.host, port=args.port)
 
 
 if __name__ == "__main__":
