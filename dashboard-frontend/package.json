@@ -1,11 +1,12 @@
 {
   "name": "dashboard-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "version": "echo $npm_package_version"
   },
   "devDependencies": {
     "vite": "^2.8.0"
