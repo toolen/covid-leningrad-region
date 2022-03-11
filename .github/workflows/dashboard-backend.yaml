@@ -1,4 +1,4 @@
-name: scraper
+name: dashboard-backend
 
 on: [push]
 
