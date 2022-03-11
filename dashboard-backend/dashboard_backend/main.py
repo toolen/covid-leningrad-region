@@ -1,5 +1,6 @@
 """This file contains entrypoint of application."""
 import argparse
+import asyncio
 import logging
 import sys
 from typing import Dict, Optional
@@ -58,7 +59,8 @@ def main() -> None:
     """
     app = init_app()
     args = parser.parse_args()
-    web.run_app(app, host=args.host, port=args.port)
+    loop = asyncio.get_event_loop()
+    web.run_app(app, loop=loop, host=args.host, port=args.port)
 
 
 if __name__ == "__main__":
