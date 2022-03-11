@@ -3,7 +3,7 @@ import './style.css';
 
 import * as agCharts from "ag-charts-community";
 
-const API_ENDPOINT = 'http://localhost:8080/api/v1';
+const API_ENDPOINT = 'https://covid.zakharov.cc/api/v1';
 const LS_DISTRICT = 'districtName';
 const LS_LOCALITY = 'localityName';
 

@@ -1,0 +1,45 @@
+name: dashboard-frontend
+
+on: [push]
+
+jobs:
+  ci:
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./dashboard-frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm install && npm install -g @lhci/cli@0.8.x
+
+      - name: Run CI
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        run: make ci
+
+      - name: Build image
+        run: make image
+
+      - name: Push image
+        if: ${{ github.ref_name == 'master' }}
+        env:
+          CR_PAT: ${{ secrets.CR_PAT }}
+        run: make push-to-ghcr
+
+    services:
+      mongo:
+        image: mongo:4.4.9
+        ports:
+          - 27017:27017
