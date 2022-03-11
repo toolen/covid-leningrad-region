@@ -25,6 +25,8 @@ jobs:
         run: npm install && npm install -g @lhci/cli@0.8.x
 
       - name: Run CI
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         run: make ci
 
       - name: Build image
