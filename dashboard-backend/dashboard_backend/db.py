@@ -144,21 +144,26 @@ class DBWrapper:
         :param locality_name: locality name.
         :return: list of districts localities.
         """
-        return cast(
-            List[str],
-            await self.collection.find(
-                filter={
-                    "district": district_name,
-                    "localities.locality": locality_name,
-                },
-                projection={
-                    "_id": 0,
-                    "date": 1,
-                    "localities": {"$elemMatch": {"locality": locality_name}},
-                },
-                sort=[("date", ASCENDING)],
-            ).to_list(length=100),
-        )
+        filter_ = {
+            "district": district_name,
+            "localities.locality": locality_name,
+        }
+        list_length = await self.collection.count_documents(filter_)
+        if list_length:
+            return cast(
+                List[str],
+                await self.collection.find(
+                    filter=filter_,
+                    projection={
+                        "_id": 0,
+                        "date": 1,
+                        "localities": {"$elemMatch": {"locality": locality_name}},
+                    },
+                    sort=[("date", ASCENDING)],
+                ).to_list(length=list_length),
+            )
+        else:
+            return []
 
 
 async def close_db(app: web.Application) -> None:
