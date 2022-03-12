@@ -22,4 +22,8 @@ FROM nginx:1.20.2-alpine@sha256:f6609f898bcdad15047629edc4033d17f9f90e2339fb5ccb
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
 
+RUN apk upgrade
+
+COPY ./nginx/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=builder /app/dist /usr/share/nginx/html
