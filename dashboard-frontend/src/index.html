@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="light">
 <head>
     <meta charset="UTF-8"/>
     <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
@@ -12,16 +12,15 @@
         <h1>Заболеваемость COVID в Ленинградской Области</h1>
         <h2>На основе <a href="http://47.rospotrebnadzor.ru/content/%D0%BE%D0%B1%D1%89%D0%B5%D0%B5-%D1%87%D0%B8%D1%81%D0%BB%D0%BE-%D0%B7%D0%B0%D1%80%D0%B5%D0%B3%D0%B8%D1%81%D1%82%D1%80%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D1%85-%D1%81%D0%BB%D1%83%D1%87%D0%B0%D0%B5%D0%B2-covid-2019-%D0%BD%D0%B0-%D1%82%D0%B5%D1%80%D1%80%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%B8-%D0%BB%D0%B5%D0%BD%D0%B8%D0%BD%D0%B3%D1%80%D0%B0%D0%B4%D1%81%D0%BA%D0%BE%D0%B9-%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D0%B8-%D1%81-1" rel="noopener noreferer">данных</a> Роспотребнадзора</h2>
     </hgroup>
-
-    <!--    <nav>-->
-    <!--        <ul>-->
-    <!--            <li>График</li>-->
-    <!--            <li>Репозиторий</li>-->
-    <!--            <li>О сайте</li>-->
-    <!--        </ul>-->
-    <!--    </nav>-->
+    <nav>
+        <ul>
+            <li><a href="#main">График</a></li>
+            <li><a href="https://github.com/toolen/covid-leningrad-region">Исходный код проекта</a></li>
+<!--            <li>О сайте</li>-->
+        </ul>
+    </nav>
 </header>
-<main class="container">
+<main id="main" class="container">
     <article>
         <section>
             <form>
@@ -43,9 +42,10 @@
             <div id="chart"></div>
         </section>
     </article>
-
 </main>
-<footer></footer>
+<footer class="container">
+    © Захаров Д.Ю., 2022
+</footer>
 
 <script type="module" src="/main.js"></script>
 </body>
