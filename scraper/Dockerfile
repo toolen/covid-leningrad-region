@@ -1,4 +1,4 @@
-FROM python:3.10.2-slim-bullseye@sha256:e8c51ac54aa716f465eb7293130535307fcfae9b864e433ca60d843561c86ef6 AS builder
+FROM python:3.10.7-slim-bullseye@sha256:7e8d32d9e8c20a3626146a932ecf98c3fc2a4b1100b008193b835acc2ab88018 AS builder
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
@@ -14,7 +14,7 @@ ENV \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
     # poetry:
-    POETRY_VERSION=1.1.13 \
+    POETRY_VERSION=1.1.14 \
     POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_CREATE=true \
     POETRY_CACHE_DIR='/var/cache/pypoetry' \
@@ -28,7 +28,7 @@ COPY ./poetry.lock ./pyproject.toml /code/
 
 RUN poetry export --no-ansi --no-interaction --output requirements.txt
 
-FROM python:3.10.2-alpine3.15@sha256:60469fac3d4c1c4781465b18f1a89d8dd2a01af9bb799d17836b972fcc463da9 AS runner
+FROM python:3.10.7-alpine3.16@sha256:f34ed96bfd9f329f89ce3977373cef37ce5d0a4ba8c5ed4aebca785d649b9082 AS runner
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"

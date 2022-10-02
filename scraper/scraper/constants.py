@@ -35,11 +35,11 @@ LOCALITY_PROPERTIES = (
 RU_HEADER_TO_PROPERTY = {
     "Район": PROPERTY_DISTRICT,
     "Число случаев": PROPERTY_DISTRICT_TOTAL_NUMBER_OF_INFECTIONS,
-    "Число выздоровлений по районам": PROPERTY_DISTRICT_TOTAL_NUMBER_OF_RECOVERIES,
-    "% выздоровевших от заболевших": PROPERTY_DISTRICT_TOTAL_PERCENTAGE_OF_RECOVERED,
     "Населённый пункт": PROPERTY_LOCALITY,
     "Общее число случаев": PROPERTY_LOCALITY_TOTAL_NUMBER_OF_INFECTIONS,
     "Число выздоровлений": PROPERTY_LOCALITY_TOTAL_NUMBER_OF_RECOVERIES,
+    "Число выздоровлений по районам": PROPERTY_DISTRICT_TOTAL_NUMBER_OF_RECOVERIES,
+    "% выздоровевших от заболевших": PROPERTY_DISTRICT_TOTAL_PERCENTAGE_OF_RECOVERED,
 }
 PROPERTY_TO_TYPE_WRAPPER: Dict[
     str, Union[Callable[[str], str], Callable[[str], int], Callable[[str], float]]

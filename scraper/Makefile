@@ -2,8 +2,8 @@ package_name = scraper
 repository = toolen/scraper
 version = $(shell poetry version -s)
 image_tag = ghcr.io/$(repository):$(version)
-hadolint_version=2.8.0
-trivy_version=0.24.2
+hadolint_version=2.10.0
+trivy_version=0.32.1
 
 image:
 	export DOCKER_BUILDKIT=1
@@ -49,6 +49,8 @@ lint:
 	poetry run radon cc --min C $(package_name)
 	poetry run radon mi --min B $(package_name)
 	poetry run radon raw --summary $(package_name) | tail -n12
+clear-cache:
+	poetry cache clear pypi --all
 email-server:
 	python -m smtpd -n -c DebuggingServer localhost:1025
 push-to-ghcr:
