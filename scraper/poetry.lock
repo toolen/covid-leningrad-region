@@ -164,7 +164,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 name = "dparse"
 version = "0.6.2"
 description = "A parser for Python dependency files"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.5"
 
@@ -355,7 +355,7 @@ python-versions = "*"
 name = "packaging"
 version = "21.3"
 description = "Core utilities for Python packages"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -491,7 +491,7 @@ zstd = ["zstandard"]
 name = "pyparsing"
 version = "3.0.9"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6.8"
 
@@ -814,7 +814,7 @@ doc = ["reno", "sphinx", "tornado (>=4.5)"]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
@@ -878,7 +878,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8ba93ef7c80da27d9978f240b51677f1468891181c80f1991f0c25e5f74f442a"
+content-hash = "56bf1d2d18529c1a6531a661ba27ebbf94c2b010a7bdc573c751edfdebf99f43"
 
 [metadata.files]
 alabaster = [

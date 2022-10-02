@@ -10,6 +10,7 @@ schedule = "1.1.0"
 pymongo = {version = "3.11.3", extras = ["srv"]}
 tenacity = "8.1.0"
 pydantic = "1.10.2"
+dparse = "0.6.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "7.1.3"
