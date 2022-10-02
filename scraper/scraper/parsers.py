@@ -13,7 +13,7 @@ from scraper.constants import (
 from scraper.exceptions import NoCurrentDateException
 from scraper.models import District, Locality
 from scraper.types import DistrictType
-from scraper.utils import get_date_from_str
+from scraper.utils import get_date_from_str, is_date_column
 
 logger = logging.getLogger(__name__)
 
@@ -128,22 +128,40 @@ class CovidPageParser(HTMLParser):
                 self.current_district = None
                 return
             if self.row_index == 0:
-                if data in RU_HEADER_TO_PROPERTY:
-                    prop = RU_HEADER_TO_PROPERTY[data]
-                    self.col_index_to_property[self.col_index] = prop
-                else:
-                    self.set_current_date_from_table(data)
-                    self.col_index_to_property[
-                        self.col_index
-                    ] = PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS
-            else:
-                prop = self.col_index_to_property[self.col_index]
-                wrapper = PROPERTY_TO_TYPE_WRAPPER[prop]
-                value = wrapper(data)
-                if prop in DISTRICT_PROPERTIES:
-                    setattr(self.current_district, prop, value)
-                else:
-                    setattr(self.current_locality, prop, value)
+                self.handle_table_header(data)
+            elif self.col_index in self.col_index_to_property:
+                self.handle_table_cell(data)
+
+    def handle_table_header(self, data: str) -> None:
+        """
+        Handle data from column header.
+
+        :param data: string
+        :return: None
+        """
+        if data in RU_HEADER_TO_PROPERTY:
+            prop = RU_HEADER_TO_PROPERTY[data]
+            self.col_index_to_property[self.col_index] = prop
+        elif is_date_column(data):
+            self.set_current_date_from_table(data)
+            self.col_index_to_property[
+                self.col_index
+            ] = PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS
+
+    def handle_table_cell(self, data: str) -> None:
+        """
+        Handle data from table cell.
+
+        :param data: string
+        :return: None
+        """
+        prop = self.col_index_to_property[self.col_index]
+        wrapper = PROPERTY_TO_TYPE_WRAPPER[prop]
+        value = wrapper(data)
+        if prop in DISTRICT_PROPERTIES:
+            setattr(self.current_district, prop, value)
+        else:
+            setattr(self.current_locality, prop, value)
 
     def set_current_date_from_title(self, data: str) -> None:
         """

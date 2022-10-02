@@ -68,3 +68,16 @@ def avoid_empty_value(value: Optional[str]) -> str:
         return value
     else:
         raise ImproperlyConfiguredException()
+
+
+def is_date_column(data: str) -> bool:
+    """Return True if string is a valid date.
+
+    :param data: string value.
+    :return: boolean.
+    """
+    try:
+        get_date_from_str(data)
+        return True
+    except ValueError:
+        return False
