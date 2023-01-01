@@ -2,8 +2,8 @@ package_name = dashboard_backend
 repository = toolen/dashboard-backend
 version = $(shell poetry version -s)
 image_tag = ghcr.io/$(repository):$(version)
-hadolint_version=2.8.0
-trivy_version=0.24.2
+hadolint_version=2.12.0
+trivy_version=0.36.0
 
 image:
 	export DOCKER_BUILDKIT=1

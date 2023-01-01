@@ -12,7 +12,7 @@ def main() -> None:
     :return: None
     """
     try:
-        response = urlopen("http://127.0.0.1:8080/api/v1/health")  # nosec
+        response = urlopen("http://127.0.0.1:9090/api/v1/health")  # nosec
         if response.code == 200:
             sys.exit(0)
         else:

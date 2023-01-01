@@ -1,4 +1,4 @@
-FROM python:3.10.2-slim-bullseye@sha256:e8c51ac54aa716f465eb7293130535307fcfae9b864e433ca60d843561c86ef6 AS builder
+FROM python:3.10.9-slim-bullseye@sha256:6862d8ed663a47f649ba5aababed01e44741a032e80d5800db619f5113f65434 AS builder
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
@@ -28,7 +28,7 @@ COPY ./poetry.lock ./pyproject.toml /code/
 
 RUN poetry export --no-ansi --no-interaction --output requirements.txt
 
-FROM python:3.10.2-alpine3.15@sha256:60469fac3d4c1c4781465b18f1a89d8dd2a01af9bb799d17836b972fcc463da9 AS runner
+FROM python:3.10.9-alpine3.17@sha256:d8a484baabf7d2337d34cdef6730413ea1feef4ba251784f9b7a8d7b642041b3 AS runner
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
@@ -46,7 +46,7 @@ ENV \
 RUN set -ex \
     && apk upgrade \
     && apk add --no-cache \
-        tini==0.19.0-r0 \
+        tini==0.19.0-r1 \
     && addgroup -g 1000 -S app \
     && adduser -h /app -G app -S -u 1000 app
 
@@ -64,8 +64,8 @@ COPY --chown=app:app ./dashboard_backend /app/dashboard_backend
 
 COPY --chown=app:app ./healthcheck.py /app
 
-EXPOSE 8080
+EXPOSE 9090
 
 HEALTHCHECK --interval=10s --timeout=10s --retries=3 CMD /app/venv/bin/python healthcheck.py || exit 1
 
-CMD [ "/sbin/tini", "--", "/app/venv/bin/python", "-m", "dashboard_backend.main", "--host", "0.0.0.0", "--port", "8080"]
+CMD [ "/sbin/tini", "--", "/app/venv/bin/python", "-m", "dashboard_backend.main", "--host", "0.0.0.0", "--port", "9090"]
