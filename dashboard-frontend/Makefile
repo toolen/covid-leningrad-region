@@ -2,8 +2,8 @@ package_name = dashboard_frontend
 repository = toolen/dashboard-frontend
 version = $(shell npm run version | tail -1)
 image_tag = ghcr.io/$(repository):$(version)
-hadolint_version=2.8.0
-trivy_version=0.24.2
+hadolint_version=2.12.0
+trivy_version=0.36.0
 
 image:
 	export DOCKER_BUILDKIT=1
@@ -12,7 +12,7 @@ image:
 	make trivy
 	make size
 container:
-	docker run --cap-drop=ALL $(image_tag)
+	docker run -p 8080:8080 --cap-drop=ALL $(image_tag)
 connect:
 	docker run -it --cap-drop=ALL $(image_tag) /bin/bash
 size:

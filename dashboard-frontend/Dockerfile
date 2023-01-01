@@ -1,4 +1,4 @@
-FROM node:16.14.0-bullseye-slim@sha256:11d539ac109ada08cd6644a701096d193270b3f8352aae549419d1703fd858d0 AS builder
+FROM node:16.19.0-bullseye-slim@sha256:9a94201317d878b97cfc83316bc448442fe621521c0dc3ca0a4575ac9391576e AS builder
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
@@ -17,12 +17,16 @@ RUN set -ex \
     && npm i \
     && npm run build
 
-FROM nginx:1.20.2-alpine@sha256:f6609f898bcdad15047629edc4033d17f9f90e2339fb5ccb97da267f16902251
+FROM nginxinc/nginx-unprivileged:1.22.1-alpine@sha256:456352cd224a42ab404d62eeb2a6745013f2a5edf8ba1780fe82c46925977ae7
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
 
+USER root
+
 RUN apk upgrade
+
+USER nginx
 
 COPY ./nginx/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 
