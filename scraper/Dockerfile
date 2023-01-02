@@ -1,4 +1,4 @@
-FROM python:3.10.7-slim-bullseye@sha256:7e8d32d9e8c20a3626146a932ecf98c3fc2a4b1100b008193b835acc2ab88018 AS builder
+FROM python:3.10.9-slim-bullseye@sha256:6862d8ed663a47f649ba5aababed01e44741a032e80d5800db619f5113f65434 AS builder
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
@@ -28,7 +28,7 @@ COPY ./poetry.lock ./pyproject.toml /code/
 
 RUN poetry export --no-ansi --no-interaction --output requirements.txt
 
-FROM python:3.10.7-alpine3.16@sha256:f34ed96bfd9f329f89ce3977373cef37ce5d0a4ba8c5ed4aebca785d649b9082 AS runner
+FROM python:3.10.9-alpine3.17@sha256:d8a484baabf7d2337d34cdef6730413ea1feef4ba251784f9b7a8d7b642041b3 AS runner
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
@@ -47,7 +47,7 @@ ENV \
 RUN set -ex \
     && apk upgrade \
     && apk add --no-cache \
-        tini==0.19.0-r0 \
+        tini==0.19.0-r1 \
     && cp /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime \
     && echo "${TIME_ZONE}" > /etc/timezone \
     && date \

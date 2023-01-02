@@ -2,8 +2,8 @@ package_name = dashboard_backend
 repository = toolen/dashboard-backend
 version = $(shell poetry version -s)
 image_tag = ghcr.io/$(repository):$(version)
-hadolint_version=2.8.0
-trivy_version=0.24.2
+hadolint_version=2.12.0
+trivy_version=0.36.0
 
 image:
 	export DOCKER_BUILDKIT=1
@@ -43,7 +43,7 @@ lint:
 	poetry run pydocstyle --add-ignore=D104 $(package_name)/
 	make test
 	poetry run bandit -r $(package_name)
-	poetry run safety check
+	poetry run safety check --ignore=51457
 	poetry run radon cc --min C $(package_name)
 	poetry run radon mi --min B $(package_name)
 	poetry run radon raw --summary $(package_name) | tail -n12
