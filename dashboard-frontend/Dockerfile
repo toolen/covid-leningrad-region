@@ -17,7 +17,7 @@ RUN set -ex \
     && npm i \
     && npm run build
 
-FROM nginxinc/nginx-unprivileged:1.22.1-alpine@sha256:456352cd224a42ab404d62eeb2a6745013f2a5edf8ba1780fe82c46925977ae7
+FROM nginxinc/nginx-unprivileged:1.25.2-alpine3.18-slim@sha256:85d76ca11059254a876a26ab26d61e6ef2f0a2073e305503397dbe0864cf3c37
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"

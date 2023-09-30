@@ -3,7 +3,7 @@ repository = toolen/dashboard-frontend
 version = $(shell npm run version | tail -1)
 image_tag = ghcr.io/$(repository):$(version)
 hadolint_version=2.12.0
-trivy_version=0.36.0
+trivy_version=0.45.1
 
 image:
 	export DOCKER_BUILDKIT=1
