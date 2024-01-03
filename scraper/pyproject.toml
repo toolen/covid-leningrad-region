@@ -27,6 +27,9 @@ Sphinx = "^4.5.0"
 sphinx-rtd-theme = "^1.0.0"
 sphinx-autoapi = "^1.8.4"
 
+[tool.poetry.group.dev.dependencies]
+safety = "2.3.5"
+
 [tool.isort]
 profile = "black"
 
