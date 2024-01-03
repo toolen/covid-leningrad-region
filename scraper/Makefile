@@ -4,6 +4,7 @@ version = $(shell poetry version -s)
 image_tag = ghcr.io/$(repository):$(version)
 hadolint_version=2.12.0
 trivy_version=0.43.1
+pwd=$(shell pwd)
 
 image:
 	export DOCKER_BUILDKIT=1
