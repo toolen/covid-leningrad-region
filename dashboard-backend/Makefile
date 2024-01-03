@@ -3,7 +3,8 @@ repository = toolen/dashboard-backend
 version = $(shell poetry version -s)
 image_tag = ghcr.io/$(repository):$(version)
 hadolint_version=2.12.0
-trivy_version=0.36.0
+trivy_version=0.43.1
+pwd=$(shell pwd)
 
 image:
 	export DOCKER_BUILDKIT=1
@@ -11,6 +12,12 @@ image:
 	docker build --pull --no-cache -t $(image_tag) .
 	make trivy
 	make size
+image\:nocache:
+	docker build --pull -t $(image_tag) .
+	make trivy
+image\:builder\:shell:
+	docker build --target builder -t $(image_tag) .
+	docker run -it -v $(pwd):/code $(image_tag) /bin/bash
 container:
 	docker run --cap-drop=ALL $(image_tag)
 size:
@@ -43,7 +50,7 @@ lint:
 	poetry run pydocstyle --add-ignore=D104 $(package_name)/
 	make test
 	poetry run bandit -r $(package_name)
-	poetry run safety check --ignore=51457
+	poetry run safety check -i 62044
 	poetry run radon cc --min C $(package_name)
 	poetry run radon mi --min B $(package_name)
 	poetry run radon raw --summary $(package_name) | tail -n12
