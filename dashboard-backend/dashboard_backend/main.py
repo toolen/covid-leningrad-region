@@ -14,7 +14,7 @@ from dashboard_backend.routes import init_routes
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--host", default="127.0.0.1")
-parser.add_argument("--port", default=8080)
+parser.add_argument("--port", default=8080, type=int)
 
 
 def init_logging(app: web.Application) -> None:
