@@ -1,4 +1,4 @@
-FROM python:3.10.9-slim-bullseye@sha256:6862d8ed663a47f649ba5aababed01e44741a032e80d5800db619f5113f65434 AS builder
+FROM python:3.10.13-slim-bookworm@sha256:9956522e7eafd57e3e7bb4b102d56f02882924019867cd2036c1a7c3ee56b174 AS builder
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
@@ -28,7 +28,7 @@ COPY ./poetry.lock ./pyproject.toml /code/
 
 RUN poetry export --no-ansi --no-interaction --output requirements.txt
 
-FROM python:3.10.9-alpine3.17@sha256:d8a484baabf7d2337d34cdef6730413ea1feef4ba251784f9b7a8d7b642041b3 AS runner
+FROM python:3.10.13-alpine3.19@sha256:139336ea16cb3e9effd95173b94b6f0529c758cb74033f42f916289d0006917f AS runner
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
@@ -47,12 +47,13 @@ ENV \
 RUN set -ex \
     && apk upgrade \
     && apk add --no-cache \
-        tini==0.19.0-r1 \
+        tini==0.19.0-r2 \
     && cp /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime \
     && echo "${TIME_ZONE}" > /etc/timezone \
     && date \
     && addgroup -g 1000 -S app \
-    && adduser -h /app -G app -S -u 1000 app
+    && adduser -h /app -G app -S -u 1000 app \
+    && pip install --no-cache-dir setuptools==65.5.1
 
 COPY --chown=app:app --from=builder /code/requirements.txt /app
 
@@ -61,7 +62,7 @@ WORKDIR /app
 USER app
 
 RUN set -ex \
-    && python -m venv venv \
+    && python -m venv --upgrade-deps venv \
     && venv/bin/pip install --no-cache-dir --require-hashes -r requirements.txt
 
 COPY ./scraper /app/scraper
