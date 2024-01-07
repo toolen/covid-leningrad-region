@@ -1,0 +1,77 @@
+services:
+
+  scraper:
+    image: ghcr.io/toolen/scraper:1.1.11
+    container_name: scraper
+    restart: always
+    volumes:
+      - ./scraper/certs:/app/certs
+    env_file:
+      - .env
+    cap_drop:
+      - ALL
+    dns:
+      - 8.8.8.8
+      - 77.88.8.8
+      - 77.88.8.1
+    depends_on:
+      - mongo
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  backend:
+    image: ghcr.io/toolen/dashboard-backend:0.1.4
+    container_name: backend
+    restart: always
+    volumes:
+      - ./dashboard-backend/certs:/app/certs
+    cap_drop:
+      - ALL
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  frontend:
+    image: ghcr.io/toolen/dashboard-frontend:1.0.0
+    container_name: frontend
+    restart: always
+    ports:
+      - "8080:8080"
+    cap_drop:
+      - ALL
+    depends_on:
+      - backend
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  mongo:
+    image: mongo:4.4.10-focal
+    container_name: mongo
+    restart: always
+    command: "mongod --tlsMode=requireTLS --tlsCertificateKeyFile=/data/ssl/mongo.pem --tlsCAFile=/data/ssl/ca.pem"
+    volumes:
+      - ./mongodb/data/ssl:/data/ssl
+      - ./mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - mongo_data:/data/db
+    env_file:
+      - .env
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+volumes:
+  mongo_data:

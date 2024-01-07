@@ -1,0 +1,28 @@
+services:
+
+  scraper:
+    build:
+      context: ./scraper
+    volumes:
+      - ./scraper/certs:/app/certs
+      - ./scraper/scraper:/app/scraper
+
+  backend:
+    build:
+      context: ./dashboard-backend
+    volumes:
+      - ./dashboard-backend/certs:/app/certs
+      - ./dashboard-backend/dashboard_backend:/app/dashboard_backend
+
+  frontend:
+    build:
+      context: ./dashboard-frontend
+    volumes:
+      - ./dashboard-frontend/dist:/usr/share/nginx/html
+
+  mongo:
+    volumes:
+      - ./mongodb/data/ssl:/data/ssl
+      - ./mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./mongodb/dump:/data/dump
+      - mongo_data:/data/db
