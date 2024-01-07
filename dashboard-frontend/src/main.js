@@ -1,9 +1,8 @@
 import '@picocss/pico/css/pico.min.css';
 import './style.css';
+import {AgCharts, time} from "ag-charts-community";
 
-import * as agCharts from "ag-charts-community";
-
-const API_ENDPOINT = 'https://covid.zakharov.cc/api/v1';
+const API_ENDPOINT = '/api/v1';
 const LS_DISTRICT = 'districtName';
 const LS_LOCALITY = 'localityName';
 
@@ -87,18 +86,20 @@ function loadData(districtName, localityName) {
                 }
             })
 
+            const legendTitle = 'Кол-во заболевших';
+
             const options = {
                 data: data,
                 container: chartContainer,
                 series: [{
                     xKey: 'date',
                     yKey: 'value',
-                    yName: 'Кол-во заболевших',
+                    yName: legendTitle,
                     tooltip: {
-                        renderer: function (params) {
+                        renderer: function ({ datum, xKey, yKey }) {
                             return {
-                                title: params.yName,
-                                content: getTooltipContent(params.xValue, params.yValue),
+                                title: legendTitle,
+                                content: getTooltipContent(datum[xKey], datum[yKey]),
                             };
                         },
                     },
@@ -113,10 +114,11 @@ function loadData(districtName, localityName) {
                         type: 'time',
                         position: 'bottom',
                         tick: {
-                            count: agCharts.time.month,
+                           interval: time.month,
                         },
                         label: {
                             format: '%b %Y',
+                            rotation: -45
                         },
                     },
                 ],
@@ -129,9 +131,9 @@ function loadData(districtName, localityName) {
             }
 
             if (chart) {
-                agCharts.AgChart.update(chart, options);
+                AgCharts.update(chart, options);
             } else {
-                chart = agCharts.AgChart.create(options);
+                chart = AgCharts.create(options);
             }
         });
     }
