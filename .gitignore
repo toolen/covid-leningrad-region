@@ -302,3 +302,6 @@ cython_debug/
 
 # covid-page-mock
 covid-page-mock/pages/*.html
+
+# mongodb archive
+mongodb/dump/covid_stat/leningrad_region.archive
