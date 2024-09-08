@@ -7,7 +7,7 @@ import sys
 import time
 from datetime import datetime
 from types import FrameType
-from typing import Optional, cast
+from typing import Optional, cast, Dict
 from urllib.error import HTTPError, URLError
 from urllib.parse import ParseResult, urlparse
 from urllib.request import Request, urlopen
@@ -52,11 +52,11 @@ def get_html_page(url: str) -> str:
         "https",
     ):
         req = Request(url)
-        kwargs = {"timeout": 500}
+        context = None
         if parse_result.scheme == "https":
-            kwargs["context"] = ssl.create_default_context(cafile=certifi.where())
+            context = ssl.create_default_context(cafile=certifi.where())
         try:
-            response = urlopen(req, **kwargs)  # nosec
+            response = urlopen(req, timeout=500, context=context)  # nosec
             return cast(str, response.read().decode("utf-8"))
         except HTTPError as e:
             logger.error(e)
