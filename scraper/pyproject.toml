@@ -10,25 +10,22 @@ schedule = "1.1.0"
 pymongo = {version = "3.11.3", extras = ["srv"]}
 tenacity = "8.1.0"
 pydantic = "1.10.13"
-dparse = "0.6.2"
+certifi = "2024.07.04"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "7.4.4"
 pytest-cov = "4.1.0"
-black = "22.8.0"
+black = "24.3.0"
 isort = "5.10.1"
 flake8 = "5.0.4"
 pydocstyle = "6.1.1"
 bandit = "1.7.6"
-safety = "2.3.5"
+safety = "3.2.7"
 mypy = "0.981"
 radon = "6.0.1"
 Sphinx = "^4.5.0"
 sphinx-rtd-theme = "^1.0.0"
 sphinx-autoapi = "^1.8.4"
-
-[tool.poetry.group.dev.dependencies]
-safety = "2.3.5"
 
 [tool.isort]
 profile = "black"
