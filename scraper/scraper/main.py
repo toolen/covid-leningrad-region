@@ -7,7 +7,7 @@ import sys
 import time
 from datetime import datetime
 from types import FrameType
-from typing import Optional, cast, Dict
+from typing import Dict, Optional, cast
 from urllib.error import HTTPError, URLError
 from urllib.parse import ParseResult, urlparse
 from urllib.request import Request, urlopen
