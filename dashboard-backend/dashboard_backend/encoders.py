@@ -1,4 +1,5 @@
 """This file contains custom JSON encoders."""
+
 import datetime
 import json
 from typing import Any

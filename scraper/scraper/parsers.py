@@ -1,4 +1,5 @@
 """This file contains parsers."""
+
 import logging
 from datetime import date
 from html.parser import HTMLParser
@@ -144,9 +145,9 @@ class CovidPageParser(HTMLParser):
             self.col_index_to_property[self.col_index] = prop
         elif is_date_column(data):
             self.set_current_date_from_table(data)
-            self.col_index_to_property[
-                self.col_index
-            ] = PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS
+            self.col_index_to_property[self.col_index] = (
+                PROPERTY_LOCALITY_NUMBER_OF_INFECTIONS
+            )
 
     def handle_table_cell(self, data: str) -> None:
         """

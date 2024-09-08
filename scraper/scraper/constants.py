@@ -1,4 +1,5 @@
 """This file contains constants."""
+
 from typing import Callable, Dict, Final, Tuple, Union
 
 PROPERTY_DISTRICT_DATE: Final = "date"

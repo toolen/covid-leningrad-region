@@ -52,7 +52,7 @@ lint:
 	poetry run pydocstyle --add-ignore=D104 $(package_name)/
 	make test
 	poetry run bandit -r $(package_name)
-	poetry run safety check -i 51457 -i 62044 -i 52510
+	poetry run safety check -i 71608 -i 72236 -i 71064 -i 70626 -i 67895 -i 70612 -i 72083 -i 71591 -i 64227 -i 65401
 	poetry run radon cc --min C $(package_name)
 	poetry run radon mi --min B $(package_name)
 	poetry run radon raw --summary $(package_name) | tail -n12

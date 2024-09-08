@@ -1,14 +1,18 @@
 """This file is entrypoint of application."""
+
 import logging
 import signal
+import ssl
 import sys
 import time
 from datetime import datetime
 from types import FrameType
 from typing import Optional, cast
 from urllib.error import HTTPError, URLError
+from urllib.parse import ParseResult, urlparse
 from urllib.request import Request, urlopen
 
+import certifi
 import schedule
 from tenacity import retry, wait_fixed
 
@@ -42,10 +46,17 @@ def get_html_page(url: str) -> str:
     :param url: html page url.
     :return: HTML page as text.
     """
-    if url.startswith("http://") or url.startswith("https://"):
+    parse_result: ParseResult = urlparse(url)
+    if parse_result.scheme in (
+        "http",
+        "https",
+    ):
         req = Request(url)
+        context = None
+        if parse_result.scheme == "https":
+            context = ssl.create_default_context(cafile=certifi.where())
         try:
-            response = urlopen(req, timeout=500)  # nosec
+            response = urlopen(req, timeout=500, context=context)  # nosec
             return cast(str, response.read().decode("utf-8"))
         except HTTPError as e:
             logger.error(e)

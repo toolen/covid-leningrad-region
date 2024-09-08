@@ -1,4 +1,5 @@
 """This file contains the code for working with the database."""
+
 import logging
 from typing import Dict, List, Optional, Union, cast
 

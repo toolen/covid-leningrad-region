@@ -1,4 +1,5 @@
 """This file contains utility functions."""
+
 from datetime import datetime
 from typing import Dict, Optional, Union
 from urllib.parse import ParseResult, urlparse

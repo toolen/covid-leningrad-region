@@ -1,4 +1,5 @@
 """This file contains database wrapper."""
+
 import logging
 from typing import Dict, List, Optional, Union, cast
 
