@@ -1,4 +1,5 @@
 """This file contains methods to work with email."""
+
 import smtplib
 from email.mime.text import MIMEText
 from typing import cast

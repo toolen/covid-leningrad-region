@@ -1,4 +1,5 @@
 """This file contains configuration properties."""
+
 import os
 from typing import Dict, Union
 

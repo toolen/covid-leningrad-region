@@ -1,4 +1,5 @@
 """This file is entrypoint of application."""
+
 import logging
 import signal
 import ssl
