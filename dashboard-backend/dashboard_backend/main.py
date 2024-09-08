@@ -1,4 +1,5 @@
 """This file contains entrypoint of application."""
+
 import argparse
 import asyncio
 import logging

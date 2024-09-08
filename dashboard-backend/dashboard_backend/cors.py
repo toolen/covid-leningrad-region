@@ -1,4 +1,5 @@
 """This file contains CORS methods."""
+
 import aiohttp_cors
 from aiohttp import web
 from aiohttp_cors import ResourceOptions

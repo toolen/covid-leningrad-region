@@ -1,4 +1,5 @@
 """This file contains config methods."""
+
 import os
 from typing import Dict, Optional, Union
 

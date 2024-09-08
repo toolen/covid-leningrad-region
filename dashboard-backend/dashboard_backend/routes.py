@@ -1,4 +1,5 @@
 """This file contains routes and handlers."""
+
 from aiohttp import web
 
 from dashboard_backend.encoders import mongo_dumps
