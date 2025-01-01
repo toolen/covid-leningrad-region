@@ -17,7 +17,7 @@ RUN set -ex \
     && npm i \
     && npm run build
 
-FROM nginxinc/nginx-unprivileged:1.27.1-alpine3.20-slim@sha256:96f720b6dc1d11723764f9d05e8adf381cd638b3835791731d5cc75629aeda74
+FROM nginxinc/nginx-unprivileged:1.26-alpine3.20@sha256:a6c15b8056a0b9c4551d1f32ccde5020f3742beb09cb3e36d76a3f1bbe0bc6eb
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
@@ -28,6 +28,8 @@ RUN apk upgrade
 
 USER nginx
 
-COPY ./nginx/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+#COPY ./nginx/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 8080
