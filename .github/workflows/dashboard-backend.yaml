@@ -1,6 +1,9 @@
 name: dashboard-backend
 
-on: [push]
+on:
+  push:
+    paths:
+      - 'dashboard-backend/**'
 
 jobs:
   ci:
