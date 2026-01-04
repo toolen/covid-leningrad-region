@@ -1,6 +1,9 @@
 name: scraper
 
-on: [push]
+on:
+  push:
+    paths:
+      - 'scraper/**'
 
 jobs:
   ci:
