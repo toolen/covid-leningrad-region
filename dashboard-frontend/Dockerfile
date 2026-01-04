@@ -17,14 +17,19 @@ RUN set -ex \
     && npm i \
     && npm run build
 
-FROM nginxinc/nginx-unprivileged:1.26-alpine3.20@sha256:a6c15b8056a0b9c4551d1f32ccde5020f3742beb09cb3e36d76a3f1bbe0bc6eb
+FROM nginxinc/nginx-unprivileged:1.29.3-alpine3.22@sha256:42c794e539b375187fa8b34b8b3f693a919b0ce8009a85e862caf39186c10b4f
 
 LABEL maintainer="dmitrii@zakharov.cc"
 LABEL org.opencontainers.image.source="https://github.com/toolen/covid-leningrad-region"
 
+ENV \
+    BUSYBOX_VERSION=1.37.0-r20
+
 USER root
 
-RUN apk upgrade
+RUN \
+   apk update && \
+   apk add --no-cache busybox=$BUSYBOX_VERSION
 
 USER nginx
 

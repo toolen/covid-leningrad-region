@@ -2,8 +2,8 @@ package_name = dashboard_frontend
 repository = toolen/dashboard-frontend
 version = $(shell npm run version | tail -1)
 image_tag = ghcr.io/$(repository):$(version)
-hadolint_version=2.12.0
-trivy_version=0.45.1
+hadolint_version=v2.14.0
+trivy_version=0.68.2
 
 image:
 	export DOCKER_BUILDKIT=1
@@ -18,9 +18,9 @@ connect:
 size:
 	docker images | grep $(repository) | grep $(version)
 hadolint:
-	docker run --rm -i hadolint/hadolint:$(hadolint_version) < Dockerfile
+	docker run --rm -i ghcr.io/hadolint/hadolint:$(hadolint_version) < Dockerfile
 trivy:
-	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v ~/.cache/trivy:/root/.cache/ aquasec/trivy:$(trivy_version) image --ignore-unfixed $(image_tag)
+	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v ~/.cache/trivy:/root/.cache/ ghcr.io/aquasecurity/trivy:$(trivy_version) image --ignore-unfixed $(image_tag)
 push-to-ghcr:
 	docker login ghcr.io -u toolen -p $(CR_PAT)
 	docker push $(image_tag)
